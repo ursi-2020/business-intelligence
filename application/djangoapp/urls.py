@@ -7,8 +7,8 @@ urlpatterns = [
 
     # Changement par dylan --------------
 
-    path('info/', views.test, name='test'),
-    # path('info/', views.info, name='info'),
+    path('test/', views.test, name='test'),
+    path('info/', views.hellogestionstock(), name='hellogestionstock'),
 
     # ------------------------------------
 
