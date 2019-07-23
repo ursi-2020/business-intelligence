@@ -9,10 +9,9 @@ def index(request):
 # Changement par dylan --------------
 
 def test(request):
-    message = api.send_request('apptest', '/infoBTest')
-    return HttpResponse("Le message de l'application partenaire est : %r" % message)
+    return HttpResponse("Le test fonctionne en local")
 
-def hellogestionstock(request):
+def hello(request):
     infoB = api.send_request('gestion-stock', 'info')
     return HttpResponse("Je suis BI et tu est : %r" % infoB)
 
