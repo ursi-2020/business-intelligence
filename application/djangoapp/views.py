@@ -30,7 +30,7 @@ def hello(request):
 
 
 def info(request):
-    return HttpResponse("Je suis BI.r")
+    return HttpResponse("Business Intelligence")
 
 
 # totonio- ---- - --  -- - - --
