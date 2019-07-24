@@ -10,8 +10,8 @@
 <form action="/">
     <input type="submit" value="Retour à l'accueil" />
 </form>
-<h1>Ajouter un article dans les stocks (BDD)</h1>
-<form action="/add-article/" method="POST">
+<h1>Retirer un article dans les stocks (BDD)</h1>
+<form action="/remove-article/" method="POST">
 {% csrf_token %}
     <label for="nom_id">Nom</label>
 <input type="text" name="nom" id="nom_id"/>

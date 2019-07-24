@@ -56,16 +56,15 @@ def add_article(request):
         form = ArticleForm(request.POST)
         if form.is_valid():
             first = Article.objects.all().filter(nom=form['nom'].value()).first()
-            if (first is None):
+            if (first is None) :
                 new_article = form.save()
-            else:
+            else :
                 first.stock += int(form['stock'].value())
                 first.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/list')
     else:
         form = ArticleForm()
-    return render(request, 'add_article.html', {'form': form})
-
+    return render(request, 'add_article.html', {'form' : form})
 
 def list(request):
     datas = Article.objects.all()
@@ -73,5 +72,26 @@ def list(request):
         'articles': datas,
     }
     return render(request, "data.html", context)
+
+def clear(request):
+    Article.objects.all().delete()
+    return HttpResponseRedirect('/list')
+
+def remove_article(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            first = Article.objects.all().filter(nom=form['nom'].value()).first()
+            if (first is not None) :
+                form_stock = int(form['stock'].value())
+                if (form_stock > first.stock):
+                    first.stock = 0
+                else :
+                    first.stock -= int(form['stock'].value())
+                first.save()
+            return HttpResponseRedirect('/list')
+    else:
+        form = ArticleForm()
+    return render(request, 'remove_article.html', {'form' : form})
 
 # ------------------------------------
