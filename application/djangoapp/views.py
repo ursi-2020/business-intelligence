@@ -9,6 +9,8 @@ from .models import *
 
 from .forms import *
 
+import json
+
 
 # -----------------------------
 
@@ -49,7 +51,17 @@ def button(request):
     context = {}
     return render(request, "button.html", context)
 
+def get_catalogue(request):
+    catalogue_request = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
+    json_data = json.loads(catalogue_request)
+    print(json_data)
+    for product in json_data["produits"]:
+        new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=product["prix"])
+        new_product.save()
+    return HttpResponse("Ajoute")
 
+def print_catalogue(request):
+    return
 
 def add_article(request):
     if request.method == 'POST':

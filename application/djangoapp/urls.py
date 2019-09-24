@@ -19,6 +19,7 @@ urlpatterns = [
     path('add-article/', views.add_article, name='add-article'),
     path('remove-article/', views.remove_article, name='remove-article'),
     path('clear/', views.clear, name='clear'),
+    path('get-catalogue/', views.get_catalogue, name='get-catalogue')
     # ------------------------------------
 
 ]
