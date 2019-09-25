@@ -26,3 +26,13 @@ class Produit(models.Model):
 
     def __str__(self):
         return 'Produit: {}'.format(self.codeProduit, self.familleProduit, self.descriptionProduit, self.quantiteMin, self.packaging, self.prix)
+
+class Customer(models.Model):
+    firstName = models.CharField(max_length=200)
+    lastName = models.CharField(max_length=200)
+    fidelityPoint = models.IntegerField(default=0)
+    payment = models.IntegerField(default=0)
+    account = models.CharField(max_length=10, default="")
+
+    def __str__(self):
+        return 'Customer: {}'.format(self.firstName, self.lastName, self.fidelityPoint, self.payment, self.account)

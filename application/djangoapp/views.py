@@ -1,7 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from apipkg import api_manager as api
 
-# new import -------------------
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
@@ -11,99 +10,35 @@ from .forms import *
 
 import json
 
-
-# -----------------------------
-
-
-# def index(request):
-#   time = api.send_request('scheduler', 'clock/time')
-#   return HttpResponse("L'heure de la clock est %r" % time)
-
-
-# Changement par dylan --------------
-
-def test(request):
-    return HttpResponse("Le test fonctionne en local")
-
-
-def hello(request):
-    infoB = api.send_request('gestion-stock', 'info')
-    return HttpResponse("Je suis BI et tu est : %r" % infoB)
-
-
-def info(request):
-    return HttpResponse("Business Intelligence")
-
-
-# totonio- ---- - --  -- - - --
-
 def index(request):
-    info = api.send_request('gestion-stock', 'info')
-    return render(request, "index.html", {'info': info})
+    return render(request, "index.html")
 
+def catalogue_produit(request):
+    products = Produit.objects.all()
+    return render(request, "catalogue_produit.html", {'products': products})
 
-def request(request):
-    text = api.send_request('gestion-stock', 'info')
-    return HttpResponse(text)
+def crm(request):
+    customers = Customer.objects.all()
+    return render(request, "crm.html", {'customers': customers})    
 
-
-def button(request):
-    context = {}
-    return render(request, "button.html", context)
 
 def get_catalogue(request):
     catalogue_request = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
     json_data = json.loads(catalogue_request)
-    print(json_data)
     for product in json_data["produits"]:
-        new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=product["prix"])
-        new_product.save()
-    return HttpResponse("Ajoute")
+        if not Produit.objects.filter(codeProduit=product["codeProduit"]).exists():
+            new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=product["prix"])
+            new_product.save()
+    return catalogue_produit(request)
 
-def print_catalogue(request):
-    return
+def get_crm(request):
+    crm_request = api.send_request('crm', 'api/data')
+    print(crm_request)
+    json_data = json.loads(crm_request)
+    print(json_data)
+    for customer in json_data:
+        if not Customer.objects.filter(account=customer['account']).exists():
+            new_customer = Customer(firstName=customer['firstName'], lastName=customer['lastName'], fidelityPoint=customer['fidelityPoint'], payment=customer['payment'], account=customer['account'])
+            new_customer.save()
+    return crm(request)
 
-def add_article(request):
-    if request.method == 'POST':
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            first = Article.objects.all().filter(nom=form['nom'].value()).first()
-            if (first is None) :
-                new_article = form.save()
-            else :
-                first.stock += int(form['stock'].value())
-                first.save()
-            return HttpResponseRedirect('/list')
-    else:
-        form = ArticleForm()
-    return render(request, 'add_article.html', {'form' : form})
-
-def list(request):
-    datas = Article.objects.all()
-    context = {
-        'articles': datas,
-    }
-    return render(request, "data.html", context)
-
-def clear(request):
-    Article.objects.all().delete()
-    return HttpResponseRedirect('/list')
-
-def remove_article(request):
-    if request.method == 'POST':
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            first = Article.objects.all().filter(nom=form['nom'].value()).first()
-            if (first is not None) :
-                form_stock = int(form['stock'].value())
-                if (form_stock > first.stock):
-                    first.stock = 0
-                else :
-                    first.stock -= int(form['stock'].value())
-                first.save()
-            return HttpResponseRedirect('/list')
-    else:
-        form = ArticleForm()
-    return render(request, 'remove_article.html', {'form' : form})
-
-# ------------------------------------

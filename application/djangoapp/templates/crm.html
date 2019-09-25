@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+{% block content %}
+	<h1>Crm</h1>
+	<div>
+		<ul>
+			
+			{% for customer in customers %}
+			<li>
+		  		{{ customer.firstName}}
+		  		{{ customer.lastName }}
+		  		{{ customer.fidelityPoint }}
+		    	{{ customer.payment }}
+		   		{{ customer.account }}
+		   	</li>
+			{% endfor %} 
+		</ul>
+	 </div>
+	<a class="btn btn-primary" href="{% url 'business-intelligence:get_crm'%}">Update</a>
+{% endblock %}
