@@ -3,14 +3,28 @@
 
 		<h1>Catalogue produits</h1>
 		<div> 
-			<ul>				
-				{% for product in products %}
-				<li>
-		   			{{ product.codeProduit}}
-		   			{{ product.prix}}
-		   		</li>
-				{% endfor %}
-			</ul>
+			<table class="table table-sm">
+				<thead>
+					<tr>
+						<th scope="col">Code produit</th>
+						<th scope="col">Prix</th>
+						<th scope="col">Famille Produit</th>
+						<th scope="col">Quantité</th>
+						<th scope="col">Packaging</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for product in products %}
+						<tr>
+							<td>{{ product.codeProduit}}</td>
+							<td>{{ product.price }}</td>
+							<td>{{ product.familleProduit }}</td>
+							<td>{{ product.quantiteMin }}</td>
+							<td>{{ product.packaging }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>	
 	 	</div>
 		<a class="btn btn-primary" href="{% url 'business-intelligence:get_catalogue'%}">Update</a>
 {% endblock %}
