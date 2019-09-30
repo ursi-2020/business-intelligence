@@ -1,7 +1,6 @@
 # business-intelligence
 
-# Welcome to Business intelligence an app codé par dylan tout seul
-
+# Welcome to Business intelligence an app really très intelligent
 ```mermaid
 graph LR
 A[Dylan ZHAO] -- référent --> B(Bunjamain Prouste)
