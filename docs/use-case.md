@@ -20,8 +20,9 @@ Ce dernier nous renvoie un objet JSON contenant un tableau des produits disponib
 Appel vers le catalogue:
 
 ```python
-products = api.send_request("catalogue-produit", "api/data")
-data = json.loads(products)
+    catalogue_request = api.send_request('catalogue-produit', 'api/data')
+    json_data = json.loads(catalogue_request)
+
 ```
 
 Ex de JSON reçu:
