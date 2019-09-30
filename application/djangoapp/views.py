@@ -42,3 +42,11 @@ def get_crm(request):
             new_customer.save()
     return crm(request)
 
+def delete_catalogue_produit(request):
+    Produit.objects.all().delete()
+    return index(request)
+
+def delete_crm(request):
+    Customer.objects.all()
+    return index(request)
+
