@@ -51,11 +51,11 @@ def get_crm(request):
 
 def delete_catalogue_produit(request):
     Produit.objects.all().delete()
-    return index(request)
+    return catalogue_produit(request)
 
 def delete_crm(request):
-    Customer.objects.all()
-    return index(request)
+    Customer.objects.all().delete()
+    return crm(request)
 
 def scheduler_catalogue_produit(request):
     clock_time = api.send_request('scheduler', 'clock/time')
