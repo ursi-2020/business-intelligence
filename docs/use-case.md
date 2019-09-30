@@ -52,21 +52,9 @@ for produit in data['produits']:
     p.save()
 ```
 
+### Afficher les données récupérées
 
-### Vider la BDD Produits
-
-Il est possible de vider le contenu de la base de données Produits de l'application, via le bouton dédié. Nous affichons ensuite la page Produits, qui est alors vide.
-Pour cela, au clic sur le bouton, nous déclenchons le code suivant:
-
-```python
-models.Produit.objects.all().delete()
-product_list = {
-    "data" : Produit.objects.all()
-}
-return render(request, "products.html", product_list)
-```
-
-La base de données Produits est alors réinitialisée.
+Il est possible d'afficher les données récupérées en 
 
 ## BI -> CRM
 
@@ -121,76 +109,4 @@ Le template HTML utilisé pour afficher les cards:
         </div>
     </div>
 {% endfor %}
-```
-
-### Effacer la base de données clients
-
-Il est possible de vider la base de données clients de l'app BI à l'aide d'un bouton.
-Le code suivant est alors déclenché:
-
-```python
-models.Customer.objects.all().delete()
-customers_list = {
-    "data" : Customer.objects.all()
-}
-return render(request, "customers.html", customers_list)
-```
-
-
-## Scheduler
-
-### Principe
-
-L'application BI met en place le système de scheduler.
-Le scheduler permet de programmer différentes tâches à effectuer, à une heure précise.
-Il existe deux tâches programmables à l'heure actuelle: récupérer les données clients, et récupérer les données du catalogue produit.
-
-
-![Diagramme de séquence](./usecase_scheduler.svg)
-
-
-### Récupération des informations du scheduler
-
-La page du scheduler affiche à tout moment la date et l'heure actuel de la clock.
-Il indique également la vitesse de celle-ci.
-
-Nous récupérons également l'ensemble des tâches programmées par le scheduler, afin de les afficher dans un tableau.
-
-Pour cela, nous utilisons le code suivant:
-
-```python
-info = api.send_request("scheduler", "clock/info")
-tasks = api.send_request("scheduler", "schedule/list")
-info = json.loads(info)
-info = {
-    "data" : info,
-    "tasks" : tasks
-}
-return render(request, "scheduler.html", info)
-```
-
-### Ajouter une tâche au scheduler
-
-Pour pouvoir ajouter une tâche au scheduler, nous avons créé un formulaire dédié.
-Il suffit d'indiquer l'application dont on souhaite récupérer les données, indiquer une date et une heure ainsi qu'une récurence.
-La tâche est alors enregistrée puis executée à l'heure indiquée.
-
-```python
-data = request.POST.dict()
-time = datetime.strptime(data["time"], '%Y-%m-%dT%H:%M')
-host = ""
-recurrence = data["recurrence"]
-url = ""
-source = "business-intelligence"
-name = "get_customers"
-data2 = ""
-if data["app"] == "products":
-    host = "business-intelligence"
-    url = "ecommerce/add-auto"
-    name = "get_products"
-elif data["app"] == "crm":
-    host = "business-intelligence"
-    url = "ecommerce/auto_load_customers"
-    name = "get_customers"
-schedule_task(host, url, time, recurrence, data2, source, name)
 ```
