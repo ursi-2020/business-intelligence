@@ -23,7 +23,7 @@ def crm(request):
 
 
 def get_catalogue(request):
-    catalogue_request = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
+    catalogue_request = api.send_request('catalogue-produit', 'api/data')
     json_data = json.loads(catalogue_request)
     for product in json_data["produits"]:
         if not Produit.objects.filter(codeProduit=product["codeProduit"]).exists():
