@@ -25,15 +25,17 @@ def catalogue_produit(request):
 
 def crm(request):
     customers = Customer.objects.all()
-    return render(request, "crm.html", {'customers': customers})    
+    return render(request, "crm.html", {'customers': customers})
 
-
-
-
+def magasin(request):
+    tickets = Vente.objects.all()
+    for ticket in tickets:
+        ticket.prix = ticket.prix / 100 
+    return render(request, "magasin.html", {'tickets': tickets})    
 
 @csrf_exempt
 def get_catalogue(request):
-    catalogue_request = api.send_request('catalogue-produit', 'api/data')
+    catalogue_request = api.send_request('catalogue-produit', 'api/get-all')
     json_data = json.loads(catalogue_request)
     for product in json_data["produits"]:
         if not Produit.objects.filter(codeProduit=product["codeProduit"]).exists():
@@ -52,6 +54,30 @@ def get_crm(request):
             new_customer = Customer(Prenom=customer['Prenom'], Nom=customer['Nom'], carteFid=customer['carteFid'], Credit=customer['Credit'], Paiement=customer['Paiement'], Compte=customer['Compte'])
             new_customer.save()
     return crm(request)
+
+@csrf_exempt
+def get_tickets(request):
+    magasin_request = api.send_request('gestion-magasin', 'api/sales')
+    if magasin_request: 
+        json_data = json.loads(magasin_request)
+        for ticket in json_data:
+                vente = Vente(date=ticket['date'],
+                              prix=ticket['prix'],
+                              client=ticket['client'],
+                              pointsFidelite=ticket['pointsFidelite'],
+                              modePaiement=ticket['modePaiement'])
+                vente.save()
+                for article_dict in ticket['articles']:
+                    tmp = Produit.objects.get(codeProduit=article_dict['codeProduit'])
+                    article = ArticleVendu(article=tmp,
+                                           vente=vente,
+                                           quantite=article_dict['quantity'])
+                    article.save()
+    return magasin(request)    
+
+def delete_tickets(request):
+    Vente.objects.all().delete()
+    return magasin(request)
 
 def delete_catalogue_produit(request):
     Produit.objects.all().delete()
@@ -75,6 +101,13 @@ def scheduler_crm(request):
     schedule_task('business-intelligence','get_crm', time, 'minute', '{}', 'business-intelligence','automatic_fetch_crm_db')
     return crm(request)
 
+def scheduler_tickets(request):
+    clock_time = api.send_request('scheduler', 'clock/time')
+    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    time = time + timedelta(seconds=10)
+    schedule_task('business-intelligence','get_tickets', time, 'minute', '{}', 'business-intelligence','automatic_fetch_gestion-magasin_db')
+    return magasin(request)        
+
 def schedule_task(host, url, time, recurrence, data, source, name):
     time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
     headers = {'Host': 'scheduler'}
@@ -83,4 +116,5 @@ def schedule_task(host, url, time, recurrence, data, source, name):
     print(r.status_code)
     print(r.text)
     return r.text
+
 
