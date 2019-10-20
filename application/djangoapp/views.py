@@ -27,6 +27,10 @@ def crm(request):
     customers = Customer.objects.all()
     return render(request, "crm.html", {'customers': customers})    
 
+
+
+
+
 @csrf_exempt
 def get_catalogue(request):
     catalogue_request = api.send_request('catalogue-produit', 'api/data')
