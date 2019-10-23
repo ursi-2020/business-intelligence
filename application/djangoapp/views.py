@@ -25,7 +25,8 @@ def catalogue_produit(request):
 
 def crm(request):
     customers = Customer.objects.all()
-    return render(request, "crm.html", {'customers': customers})    
+    fidcustomers = list(filter(lambda x: x.Compte is not None, customers))
+    return render(request, "crm.html", {'customers': customers, 'fidcustomers': fidcustomers})
 
 
 
