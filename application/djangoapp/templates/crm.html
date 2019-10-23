@@ -7,17 +7,6 @@
                 <h5 class="card-header">Clients Fidélisés</h5>
                 <div class="card-body">
                     <div class="metric-value d-inline-block">
-                        <h1 class="mb-1">{{ fidcustomers }}</h1>
-                    </div>
-                    <div class="metric-label d-inline-block float-right text-success font-weight-bold">
-                        <span class="icon-circle-small icon-box-xs text-success bg-success-light"><i class="fa fa-fw fa-arrow-up"></i></span><span class="ml-1">--%</span>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <h5 class="card-header">Clients</h5>
-                <div class="card-body">
-                    <div class="metric-value d-inline-block">
                         <h1 class="mb-1">{{ customers.count }}</h1>
                     </div>
                     <div class="metric-label d-inline-block float-right text-success font-weight-bold">
@@ -33,7 +22,6 @@
 					<th scope="col">Nom</th>
 					<th scope="col">Point de fidélité</th>
 					<th scope="col">Paiement</th>
-					<th scope="col">Compte</th>
                     <th scope="col">Carte de Fidélité</th>
 				</tr>
 			</thead>
@@ -44,7 +32,6 @@
 						<td>{{ customer.Nom }}</td>
 						<td>{{ customer.Credit }}</td>
 						<td>{{ customer.Paiement }}</td>
-						<td>{{ customer.Compte }}</td>
                         <td>{{ customer.carteFid }}</td>
                     </tr>
 				{% endfor %}
