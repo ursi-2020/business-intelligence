@@ -25,7 +25,8 @@ def catalogue_produit(request):
 
 def crm(request):
     customers = Customer.objects.all()
-    return render(request, "crm.html", {'customers': customers})
+    fidcustomers = sum(1 for i in customers if i.Compte != "")
+    return render(request, "crm.html", {'customers': customers, 'fidcustomers': fidcustomers})
 
 def magasin(request):
     tickets = Vente.objects.all()
