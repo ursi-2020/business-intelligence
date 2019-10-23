@@ -8,14 +8,6 @@ class Article(models.Model):
     def __str__(self):
         return 'Article: {}'.format(self.nom)
 
-
-class Vente(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    date = models.DateTimeField()
-
-    def __str__(self):
-        return 'Vente: {} - {}'.format(self.article.nom, self.date)
-
 class Produit(models.Model):
     codeProduit = models.CharField(max_length=200)
     familleProduit = models.CharField(max_length=200)
@@ -38,3 +30,16 @@ class Customer(models.Model):
 
     def __str__(self):
         return 'Customer: {}'.format(self.firstName, self.lastName, self.fidelityPoint, self.payment, self.account)
+
+class Vente(models.Model):
+    date = models.DateTimeField()
+    prix = models.IntegerField(default=0)
+    client = models.CharField(max_length=20, default="")
+    pointsFidelite = models.IntegerField(default=0)
+    modePaiement = models.CharField(max_length=10, default= "")
+    articles = models.ManyToManyField(Produit, through='ArticleVendu')
+
+class ArticleVendu(models.Model):
+    article = models.ForeignKey(Produit, on_delete=models.PROTECT)
+    vente = models.ForeignKey(Vente, on_delete=models.PROTECT)
+    quantite = models.IntegerField(null=True)            

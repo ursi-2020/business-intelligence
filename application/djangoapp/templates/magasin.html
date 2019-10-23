@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+{% block content %}
+	<h1>Magasin</h1>
+	<div>	
+
+		<table class="table table-sm">
+			<thead>
+				<tr>
+					<th scope="col">UserID</th>
+					<th scope="col">Produit acheté</th>
+					<th scope="col">Origine</th>
+					<th scope="col">Destination</th>
+					<th scope="col">Numéro de suivi</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for ticket in tickets %}
+					<tr>
+						{% for elem in ticket %}
+							<td> {{ elem }} </td>
+						{% endfor %}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	 </div>
+	
+	<a class="btn btn-primary" href="{% url 'business-intelligence:get_tickets'%}">Update</a>
+    <a class="btn btn-primary" href="{% url 'business-intelligence:delete_tickets'%}">Delete Magasin DB</a>
+	<a class="btn btn-primary" href="{% url 'business-intelligence:scheduler_tickets'%}">Automatically update Magasin DB</a>
+{% endblock %}
