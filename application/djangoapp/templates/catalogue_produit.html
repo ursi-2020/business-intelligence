@@ -1,13 +1,8 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block content %}
-    <script>
-        $(document).ready(function() {
-          $('#table').DataTable();
-        });
-    </script>
-
-		<h1>Catalogue produits</h1>
+    <div class="container-fluid  dashboard-content">
+        <h2 class="mb-2"><b>Catalogue Produit</b></h2>
 
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="card">
@@ -46,7 +41,8 @@
 				</tbody>
 			</table>	
 	 	</div>
-		<a class="btn btn-primary" href="{% url 'business-intelligence:get_catalogue'%}">Update</a>
+    </div>
+    <a class="btn btn-primary" href="{% url 'business-intelligence:get_catalogue'%}">Update</a>
     <a class="btn btn-primary" href="{% url 'business-intelligence:delete_catalogue_produit'%}">Delete Catalogue Produit DB</a>
     <a class="btn btn-primary" href="{% url 'business-intelligence:scheduler_catalogue_produit'%}">Automatically update Catalogue Produit DB</a>
 {% endblock %}
