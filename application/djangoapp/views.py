@@ -48,8 +48,8 @@ def get_crm(request):
     json_data = json.loads(crm_request)
     print(json_data)
     for customer in json_data:
-        if not Customer.objects.filter(account=customer['account']).exists():
-            new_customer = Customer(firstName=customer['firstName'], lastName=customer['lastName'], fidelityPoint=customer['fidelityPoint'], payment=customer['payment'], account=customer['account'])
+        if not Customer.objects.filter(Compte=customer['Compte']).exists():
+            new_customer = Customer(Prenom=customer['Prenom'], Nom=customer['Nom'], carteFid=customer['carteFid'], Credit=customer['Credit'], Paiement=customer['Paiement'], Compte=customer['Compte'])
             new_customer.save()
     return crm(request)
 
