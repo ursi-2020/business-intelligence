@@ -69,4 +69,6 @@ def catalogue_produit(request):
 
 Les fonctions utilisées pour récupérer les données de l'application CRM sont identiques à celles de Catalogue Produit, de même que pour les afficher.
 
+## BI -> Gestion MAGASIN
 
+Les fonctions utilisées pour récupérer les données de l'application Gestion MAGASIN sont identiques à celles de Catalogue Produit, de même que pour les afficher.
