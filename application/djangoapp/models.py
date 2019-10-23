@@ -42,4 +42,4 @@ class Vente(models.Model):
 class ArticleVendu(models.Model):
     article = models.ForeignKey(Produit, on_delete=models.PROTECT)
     vente = models.ForeignKey(Vente, on_delete=models.PROTECT)
-    quantite = models.IntegerField(null=True)
+    quantite = models.IntegerField(null=True)            
