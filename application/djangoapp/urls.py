@@ -1,6 +1,8 @@
 from django.urls import path
 
 from . import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 
 
 app_name = 'business-intelligence'
@@ -16,3 +18,5 @@ urlpatterns = [
     path('scheduler_crm', views.scheduler_crm, name='scheduler_crm'),
     path('scheduler_catalogue_produit', views.scheduler_catalogue_produit, name='scheduler_catalogue_produit')
 ]
+
+urlpatterns += staticfiles_urlpatterns()
