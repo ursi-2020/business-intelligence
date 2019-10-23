@@ -20,20 +20,32 @@
 		<table class="table table-sm">
 			<thead>
 				<tr>
-					<th scope="col">UserID</th>
-					<th scope="col">Produit acheté</th>
-					<th scope="col">Origine</th>
-					<th scope="col">Destination</th>
-					<th scope="col">Numéro de suivi</th>
+					<th scope="col">Date</th>
+					<th scope="col">Prix</th>
+					<th scope="col">Client</th>
+					<th scope="col">Points fidélités</th>
+					<th scope="col">Mode paiement</th>
+                    <th scope="col">Articles</th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for ticket in tickets %}
 					<tr>
-						{% for elem in ticket %}
-							<td> {{ elem }} </td>
-						{% endfor %}
-					</tr>
+						<td>{{ ticket.date}}</td>
+						<td>{{ ticket.prix }}</td>
+						<td>{{ ticket.client }}</td>
+						<td>{{ ticket.pointsFidelite }}</td>
+						<td>{{ ticker.modePaiement }}</td>
+                        <td>
+                            <ul>
+                            {% for article in ticket.articles %}
+                                    <li>
+                                        {{ article.codeProduit }}
+                                    </li>
+                            {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
 				{% endfor %}
 			</tbody>
 		</table>
