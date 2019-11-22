@@ -58,7 +58,7 @@ def get_crm(request):
 
 @csrf_exempt
 def get_tickets(request):
-    magasin_request = api.send_request('gestion-magasin', 'api/sales')
+    magasin_request = api.send_request('crm', 'api/get_tickets')
     if magasin_request:
         ArticleVendu.objects.all().delete()
         Vente.objects.all().delete()
@@ -74,7 +74,10 @@ def get_tickets(request):
                     tmp = Produit.objects.get(codeProduit=article_dict['codeProduit'])
                     article = ArticleVendu(article=tmp,
                                            vente=vente,
-                                           quantite=article_dict['quantiteMin'])
+                                           quantity=article_dict['quantity'],
+                                           prixAvant=article_dict['prixAvant'],
+                                           prixApres=article_dict['prixApres'],
+                                           promo=article_dict['promo'])
                     article.save()
     return magasin(request)
 
