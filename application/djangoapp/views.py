@@ -63,6 +63,7 @@ def get_tickets(request):
         ArticleVendu.objects.all().delete()
         Vente.objects.all().delete()
         json_data = json.loads(magasin_request)
+        print(json_data)
         for ticket in json_data:
                 vente = Vente(date=ticket['date'],
                               prix=ticket['prix'],
@@ -125,9 +126,38 @@ def schedule_task(host, url, time, recurrence, data, source, name):
     return r.text
 
 def get_recent_tickets_data(request):
+    nb_tot = [30, 15, 12, 14, 16, 23, 12];
+    nb_prom = [17, 6, 11, 2, 13, 19, 3];
+    nb_classic = [13, 9, 1, 12, 3, 4, 9];
+    now = datetime.today()
+    jours = [(now - timedelta(6)).strftime("%Y-%m-%d"),
+             (now - timedelta(5)).strftime("%Y-%m-%d"),
+             (now - timedelta(4)).strftime("%Y-%m-%d"),
+             (now - timedelta(3)).strftime("%Y-%m-%d"),
+             (now - timedelta(2)).strftime("%Y-%m-%d"),
+             (now - timedelta(1)).strftime("%Y-%m-%d"),
+             now.strftime("%Y-%m-%d")]
+
+    # promotions = ArticleVendu.objects.get(promo__isnull=False)
+    # classics = ArticleVendu.objects.get(promo__isnull=True)
+
+    # for prom in promotions :
+    #    elapsed = datetime.datetime.now() - prom.vente.date
+    #    for i in range(7):
+    #        if elapsed > datetime.timedelta(days = i + 1) && elapsed < datetime.timedelta(days = i + 2):
+    #            nb_prom[i] += 1
+
+    #for classic in classics :
+    #    elapsed = datetime.datetime.now() - classic.vente.date
+    #    for i in range(7):
+    #        if elapsed > datetime.timedelta(days = i + 1) && elapsed < datetime.timedelta(days = i + 2):
+    #            nb_classic[i] += 1
+
     data = {
-        "promotions": [12, 19, 3, 5, 2, 3],
-        "classics": [1, 5, 12, 2, 7, 9],
+        "promotions": nb_prom,
+        "classics": nb_classic,
+        "total": nb_tot,
+        "jours": jours,
     }
     return JsonResponse(data)
 
