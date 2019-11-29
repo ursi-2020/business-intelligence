@@ -20,7 +20,8 @@ urlpatterns = [
     path('delete_tickets', views.delete_tickets, name='delete_tickets'),
     path('scheduler_crm', views.scheduler_crm, name='scheduler_crm'),
     path('scheduler_catalogue_produit', views.scheduler_catalogue_produit, name='scheduler_catalogue_produit'),
-    path('scheduler_tickets', views.scheduler_tickets, name='scheduler_tickets')
+    path('scheduler_tickets', views.scheduler_tickets, name='scheduler_tickets'),
+    path('tickets/data', views.get_recent_tickets_data, name='get_recent_tickets_data')
 ]
 
 urlpatterns += staticfiles_urlpatterns()
