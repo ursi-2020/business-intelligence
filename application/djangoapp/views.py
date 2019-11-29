@@ -126,8 +126,8 @@ def schedule_task(host, url, time, recurrence, data, source, name):
 
 def get_recent_tickets_data(request):
     data = {
-        "sales": 100,
-        "customers": 10,
+        "promotions": [12, 19, 3, 5, 2, 3],
+        "classics": [1, 5, 12, 2, 7, 9],
     }
     return JsonResponse(data)
 
