@@ -65,7 +65,8 @@ def get_tickets(request):
         json_data = json.loads(crm_tickets_request)
         print(json_data)
         for ticket in json_data['tickets']:
-                new_ticket = Ticket(DateTicket=parse_datetime(ticket['date']), Prix=ticket['prix'], Client=ticket['client'],
+                print()
+                new_ticket = Ticket(DateTicket=datetime.strptime(ticket['date'], '%Y-%m-%d'), Prix=ticket['prix'], Client=ticket['client'],
                                     PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'])
                 new_ticket.save()
                 if ticket['articles'] != '':
