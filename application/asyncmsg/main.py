@@ -11,7 +11,7 @@ from application.djangoapp.models import *
 
 def main():
     print("Liste des ventes:")
-    for v in Vente.objects.all():
+    for v in PurchasedArticle.objects.all():
         print("ID: " + str(v.id) + "\tArticle: " + v.article.nom + "\tDate: " + str(v.date))
 
 

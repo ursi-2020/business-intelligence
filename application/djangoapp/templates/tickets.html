@@ -4,7 +4,7 @@
     {% load static %}
 
     <div class="container-fluid  dashboard-content">
-        <h2 class="mb-2"><b>Magasin</b></h2>
+        <h2 class="mb-2"><b>Tickets</b></h2>
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="card">
                 <h5 class="card-header">Tickets</h5>
@@ -42,17 +42,19 @@
             <tbody>
             {% for ticket in tickets %}
                 <tr>
-                    <td>{{ ticket.date }}</td>
-                    <td>{{ ticket.prix }}</td>
-                    <td>{{ ticket.client }}</td>
-                    <td>{{ ticket.pointsFidelite }}</td>
-                    <td>{{ ticket.modePaiement }}</td>
+                    <td>{{ ticket.DateTicket }}</td>
+                    <td>{{ ticket.Prix }}</td>
+                    <td>{{ ticket.Client }}</td>
+                    <td>{{ ticket.PointsFidelite }}</td>
+                    <td>{{ ticket.ModePaiement }}</td>
                     <td>
                         <ul>
-                            {% for article in ticket.articles.all %}
-                                <li>
-                                    {{ article.codeProduit }}
-                                </li>
+                            {% for article in purchasedArticles %}
+                                {% if article.ticket.id == ticket.id %}
+                                    <li>
+                                        {{ article.codeProduit }}
+                                    </li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </td>
@@ -63,7 +65,7 @@
     </div>
 
     <a class="btn btn-primary" href="{% url 'business-intelligence:get_tickets' %}">Update</a>
-    <a class="btn btn-primary" href="{% url 'business-intelligence:delete_tickets' %}">Delete Magasin DB</a>
+    <a class="btn btn-primary" href="{% url 'business-intelligence:delete_tickets' %}">Delete Ticket DB</a>
     <a class="btn btn-primary" href="{% url 'business-intelligence:scheduler_tickets' %}">Automatically update Magasin
         DB</a>
 

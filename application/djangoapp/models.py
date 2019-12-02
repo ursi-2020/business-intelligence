@@ -31,18 +31,18 @@ class Customer(models.Model):
     def __str__(self):
         return 'Customer: {}'.format(self.firstName, self.lastName, self.fidelityPoint, self.payment, self.account)
 
-class Vente(models.Model):
-    date = models.DateTimeField()
-    prix = models.IntegerField(default=0)
-    client = models.CharField(max_length=20, default="")
-    pointsFidelite = models.IntegerField(default=0)
-    modePaiement = models.CharField(max_length=10, default= "")
-    articles = models.ManyToManyField(Produit, through='ArticleVendu')
 
-class ArticleVendu(models.Model):
-    article = models.ForeignKey(Produit, on_delete=models.PROTECT)
-    vente = models.ForeignKey(Vente, on_delete=models.PROTECT)
-    quantity = models.IntegerField(null=True)
-    prixAvant = models.IntegerField(null=True)
-    prixApres = models.IntegerField(null=True)
-    promo = models.IntegerField(null=True)
+class PurchasedArticle(models.Model):
+    codeProduit = models.CharField(max_length=200)
+    prixAvant = models.IntegerField(default=0)
+    prixApres = models.IntegerField(default=0)
+    promo = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=0)
+    ticket = models.ForeignKey('Ticket', related_name='purchased_articles', on_delete=models.CASCADE)
+
+class Ticket(models.Model):
+    DateTicket = models.DateField(blank=True, null=True)
+    Prix = models.IntegerField(default=0)
+    Client = models.TextField(blank=False)
+    PointsFidelite = models.IntegerField(default=0)
+    ModePaiement = models.CharField(max_length=10)

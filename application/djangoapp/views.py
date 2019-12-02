@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 
 import requests
 
+from django.utils.dateparse import parse_datetime
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import *
@@ -28,11 +29,12 @@ def crm(request):
     fidcustomers = sum(1 for i in customers if i.Compte != "")
     return render(request, "crm.html", {'customers': customers, 'fidcustomers': fidcustomers})
 
-def magasin(request):
-    tickets = Vente.objects.all()
+def tickets(request):
+    tickets = Ticket.objects.all()
     for ticket in tickets:
-        ticket.prix = ticket.prix / 100 
-    return render(request, "magasin.html", {'tickets': tickets})    
+        ticket.Prix = ticket.Prix / 100 
+    purchasedArticles = PurchasedArticle.objects.all()
+    return render(request, "tickets.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles})    
 
 @csrf_exempt
 def get_catalogue(request):
@@ -58,34 +60,27 @@ def get_crm(request):
 
 @csrf_exempt
 def get_tickets(request):
-    magasin_request = api.send_request('crm', 'api/get_tickets')
-    if magasin_request:
-        ArticleVendu.objects.all().delete()
-        Vente.objects.all().delete()
-        json_data = json.loads(magasin_request)
+    crm_tickets_request = api.send_request('crm', 'api/get_tickets')
+    if crm_tickets_request:
+        json_data = json.loads(crm_tickets_request)
         print(json_data)
-        for ticket in json_data:
-                vente = Vente(date=ticket['date'],
-                              prix=ticket['prix'],
-                              client=ticket['client'],
-                              pointsFidelite=ticket['pointsFidelite'],
-                              modePaiement=ticket['modePaiement'])
-                vente.save()
-                for article_dict in ticket['articles']:
-                    tmp = Produit.objects.get(codeProduit=article_dict['codeProduit'])
-                    article = ArticleVendu(article=tmp,
-                                           vente=vente,
-                                           quantity=article_dict['quantity'],
-                                           prixAvant=article_dict['prixAvant'],
-                                           prixApres=article_dict['prixApres'],
-                                           promo=article_dict['promo'])
-                    article.save()
-    return magasin(request)
+        for ticket in json_data['tickets']:
+                new_ticket = Ticket(DateTicket=parse_datetime(ticket['date']), Prix=ticket['prix'], Client=ticket['client'],
+                                    PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'])
+                new_ticket.save()
+                if ticket['articles'] != '':
+                    for article in ticket['articles']:
+                        new_article = PurchasedArticle(codeProduit=article['codeProduit'],
+                                                       prixAvant=article['prixAvant'], prixApres=article['prixApres'],
+                                                       promo=article['promo'], quantity=article['quantity'],
+                                                       ticket=new_ticket)
+                        new_article.save()
+    return tickets(request)
 
 def delete_tickets(request):
-    ArticleVendu.objects.all().delete()
-    Vente.objects.all().delete()
-    return magasin(request)
+    PurchasedArticle.objects.all().delete()
+    Ticket.objects.all().delete()
+    return tickets(request)
 
 def delete_catalogue_produit(request):
     Produit.objects.all().delete()
@@ -126,9 +121,9 @@ def schedule_task(host, url, time, recurrence, data, source, name):
     return r.text
 
 def get_recent_tickets_data(request):
-    nb_tot = [30, 15, 12, 14, 16, 23, 12];
-    nb_prom = [17, 6, 11, 2, 13, 19, 3];
-    nb_classic = [13, 9, 1, 12, 3, 4, 9];
+    nb_tot = [0, 0, 0, 0, 0, 0, 0];
+    nb_prom = [0, 0, 0, 0, 0, 0, 0];
+    nb_classic = [0, 0, 0, 0, 0, 0, 0];
     now = datetime.today()
     jours = [(now - timedelta(6)).strftime("%Y-%m-%d"),
              (now - timedelta(5)).strftime("%Y-%m-%d"),
@@ -138,26 +133,35 @@ def get_recent_tickets_data(request):
              (now - timedelta(1)).strftime("%Y-%m-%d"),
              now.strftime("%Y-%m-%d")]
 
-    # promotions = ArticleVendu.objects.get(promo__isnull=False)
-    # classics = ArticleVendu.objects.get(promo__isnull=True)
+    promotions = PurchasedArticle.objects.exclude(promo=0)
+    classics = PurchasedArticle.objects.filter(promo=0)
 
-    # for prom in promotions :
-    #    elapsed = datetime.datetime.now() - prom.vente.date
-    #    for i in range(7):
-    #        if elapsed > datetime.timedelta(days = i + 1) && elapsed < datetime.timedelta(days = i + 2):
-    #            nb_prom[i] += 1
+    for prom in promotions:
+        print(prom.ticket.DateTicket)
 
-    #for classic in classics :
-    #    elapsed = datetime.datetime.now() - classic.vente.date
-    #    for i in range(7):
-    #        if elapsed > datetime.timedelta(days = i + 1) && elapsed < datetime.timedelta(days = i + 2):
-    #            nb_classic[i] += 1
+    for prom in promotions :
+        elapsed = datetime.now().date() - prom.ticket.DateTicket
+        for i in range(7):
+            if elapsed >= timedelta(days = i) and elapsed < timedelta(days = i + 1):
+                nb_prom[i] += 1
+    for classic in classics :
+        elapsed = datetime.now().date() - classic.ticket.DateTicket
+        for i in range(7):
+            if elapsed >= timedelta(days = i) and elapsed < timedelta(days = i + 1):
+               nb_classic[i] += 1
+
+    for i in range(7):
+        nb_tot[i] = nb_prom[i] + nb_classic[i]           
+
+    nb_prom.reverse()
+    nb_classic.reverse()
+    nb_tot.reverse()
 
     data = {
         "promotions": nb_prom,
         "classics": nb_classic,
         "total": nb_tot,
-        "jours": jours,
+        "jours": jours
     }
     return JsonResponse(data)
 
