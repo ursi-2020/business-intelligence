@@ -38,7 +38,7 @@ python -m application.manage migrate
 mkdir -p "${DIR}/static"
 mkdir -p "${DIR}/medias"
 #python -m application.manage collectstatic --clear --no-input
-python -m application.manage collectstatic --no-input
+#python -m application.manage collectstatic --no-input
 
 
 
