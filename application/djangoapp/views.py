@@ -107,8 +107,8 @@ def scheduler_crm(request):
 def scheduler_tickets(request):
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
-    time = time + timedelta(seconds=10)
-    schedule_task('business-intelligence','get_tickets', time, 'minute', '{}', 'business-intelligence','automatic_fetch_gestion-magasin_db')
+    time = time + timedelta(seconds=180)
+    schedule_task('business-intelligence','get_tickets', time, 'day', '{}', 'business-intelligence','automatic_fetch_gestion-magasin_db')
     return magasin(request)        
 
 def schedule_task(host, url, time, recurrence, data, source, name):
@@ -124,7 +124,8 @@ def get_recent_tickets_data(request):
     nb_tot = [0, 0, 0, 0, 0, 0, 0];
     nb_prom = [0, 0, 0, 0, 0, 0, 0];
     nb_classic = [0, 0, 0, 0, 0, 0, 0];
-    now = datetime.today()
+    clock_time = api.send_request('scheduler', 'clock/time')
+    now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     jours = [(now - timedelta(6)).strftime("%Y-%m-%d"),
              (now - timedelta(5)).strftime("%Y-%m-%d"),
              (now - timedelta(4)).strftime("%Y-%m-%d"),
@@ -140,12 +141,12 @@ def get_recent_tickets_data(request):
         print(prom.ticket.DateTicket)
 
     for prom in promotions :
-        elapsed = datetime.now().date() - prom.ticket.DateTicket
+        elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - prom.ticket.DateTicket
         for i in range(7):
             if elapsed >= timedelta(days = i) and elapsed < timedelta(days = i + 1):
                 nb_prom[i] += 1
     for classic in classics :
-        elapsed = datetime.now().date() - classic.ticket.DateTicket
+        elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - classic.ticket.DateTicket
         for i in range(7):
             if elapsed >= timedelta(days = i) and elapsed < timedelta(days = i + 1):
                nb_classic[i] += 1
