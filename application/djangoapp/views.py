@@ -38,6 +38,15 @@ def tickets(request):
     purchasedArticles = PurchasedArticle.objects.all()
     return render(request, "tickets.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles, 'chiffre_affaire': round(chiffre_affaire, 2)})
 
+def stock(request):
+    tickets = Ticket.objects.all()
+    chiffre_affaire = 0
+    for ticket in tickets:
+        ticket.Prix = ticket.Prix / 100
+        chiffre_affaire = chiffre_affaire + ticket.Prix
+    purchasedArticles = PurchasedArticle.objects.all()
+    return render(request, "stock.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles, 'chiffre_affaire': round(chiffre_affaire, 2)})
+
 @csrf_exempt
 def get_catalogue(request):
     catalogue_request = api.send_request('catalogue-produit', 'api/get-all')

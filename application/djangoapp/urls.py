@@ -21,7 +21,8 @@ urlpatterns = [
     path('scheduler_crm', views.scheduler_crm, name='scheduler_crm'),
     path('scheduler_catalogue_produit', views.scheduler_catalogue_produit, name='scheduler_catalogue_produit'),
     path('scheduler_tickets', views.scheduler_tickets, name='scheduler_tickets'),
-    path('tickets/data', views.get_recent_tickets_data, name='get_recent_tickets_data')
+    path('tickets/data', views.get_recent_tickets_data, name='get_recent_tickets_data'),
+    path('stock', views.stock, name='stock')
 ]
 
 urlpatterns += staticfiles_urlpatterns()
