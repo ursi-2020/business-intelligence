@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .api import stock
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
@@ -22,7 +23,8 @@ urlpatterns = [
     path('scheduler_catalogue_produit', views.scheduler_catalogue_produit, name='scheduler_catalogue_produit'),
     path('scheduler_tickets', views.scheduler_tickets, name='scheduler_tickets'),
     path('tickets/data', views.get_recent_tickets_data, name='get_recent_tickets_data'),
-    path('stock', views.stock, name='stock')
+    path('stock', views.stock, name='stock'),
+    path('ask_for_stock', stock.ask_for_stock, name='ask_for_stock')
 ]
 
 urlpatterns += staticfiles_urlpatterns()

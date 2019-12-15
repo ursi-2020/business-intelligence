@@ -46,3 +46,11 @@ class Ticket(models.Model):
     Client = models.TextField(blank=False)
     PointsFidelite = models.IntegerField(default=0)
     ModePaiement = models.CharField(max_length=10)
+
+class Stock(models.Model):
+    date = models.DateField(blank=True, null=True)
+    codeProduit = models.CharField(max_length=200)
+    quantite = models.IntegerField()
+
+    def __str__(self):
+        return 'Stock: {}'.format(self.codeProduit, self.quantite)

@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <table class="table table-sm">
+        <table id="table" class="table table-sm">
             <thead>
             <tr>
                 <th scope="col">Date</th>
@@ -88,10 +88,18 @@
     <script src="{% static 'assets/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'assets/vendor/charts/charts-bundle/Chart.bundle.js' %}"></script>
     <script src="{% static 'assets/vendor/charts/charts-bundle/chartjs.js' %}"></script>
+    <script src="{% static 'assets/vendor/datatables/js/data-table.js' %}"></script>
+    <script src="{% static 'assets/vendor/datatables/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/datatables/js/dataTables.bootstrap4.min.js' %}"></script>
 
     <script>
+        $(document).ready(function() {
+            $('#table').DataTable();
+        } );
+
         let datas = {};
         {% block jquery %}
+
             let endpoint = '/tickets/data';
             $.ajax({
                 method: "GET",
