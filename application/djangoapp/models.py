@@ -54,3 +54,10 @@ class Stock(models.Model):
 
     def __str__(self):
         return 'Stock: {}'.format(self.codeProduit, self.quantite)
+
+class StockMagasin(models.Model):
+    date = models.DateField(blank=True, null=True)
+    codeProduit = models.CharField(max_length=200)
+    numeroFournisseur = models.IntegerField()
+    codeFournisseur = models.CharField(max_length=200)
+    stockDisponible = models.IntegerField()

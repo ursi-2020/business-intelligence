@@ -11,6 +11,8 @@
                 <th scope="col">Date</th>
                 <th scope="col">Code Produit</th>
                 <th scope="col">Stock Disponible</th>
+                <th scope="col">Code Fournisseur</th>
+                <th scope="col">Numéro Fournisseur</th>
             </tr>
             </thead>
             <tbody>
@@ -18,7 +20,9 @@
                 <tr>
                     <td>{{ stock.date }}</td>
                     <td>{{ stock.codeProduit }}</td>
-                    <td>{{ stock.quantite }}</td>
+                    <td>{{ stock.stockDisponible }}</td>
+                    <td>{{ stock.codeFournisseur }}</td>
+                    <td>{{ stock.numeroFournisseur }}</td>
                 </tr>
             {% endfor %}
             </tbody>

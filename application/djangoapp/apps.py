@@ -17,10 +17,10 @@ def schedule_tickets(time):
 
 def schedule_magasin_stock(time):
     target_app = 'business-intelligence'
-    target_url = 'get_tickets'
+    target_url = 'ask_for_magasin_stock'
     data = '{}'
     source_app = "business-intelligence"
-    name = "BI-fetch-tickets"
+    name = "BI : Ask for Magasin Stock"
     api.schedule_task(target_app, target_url, time, 'day', data, source_app, name)
 
 def schedule_entrepot_stock(time):
@@ -43,4 +43,5 @@ class ApplicationConfig(AppConfig):
             time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
             time = time + timedelta(seconds=180)
             #schedule_tickets(time)
+            schedule_magasin_stock(time)
             schedule_entrepot_stock(time)

@@ -10,7 +10,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
 from application.djangoapp.models import *
-from application.djangoapp.api import stock
+from application.djangoapp.api import stock, magasin
+
 
 def dispatch(ch, method, properties, body):
     jsonLoad = json.loads(body)
@@ -18,11 +19,15 @@ def dispatch(ch, method, properties, body):
     functionName = ""
     if 'functionname' in jsonLoad:
         functionName = jsonLoad["functionname"]
-    print(" [x] Received async from", fromApp, "with function '" + functionName + "'")
+    print(" [<] Received async from", fromApp, "with function '" + functionName + "'")
 
     if fromApp == 'gestion-stock':
         if functionName == 'get_stock':
             stock.get_stock(jsonLoad)
+
+    elif fromApp == 'gestion-magasin':
+        if functionName == 'get_stock_magasin':
+            magasin.get_stock_magasin(jsonLoad)
 
     else:
         print("Le nom de l application du json n est pas valide")
