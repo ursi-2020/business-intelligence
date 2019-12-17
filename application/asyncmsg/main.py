@@ -24,6 +24,10 @@ def dispatch(ch, method, properties, body):
     if fromApp == 'gestion-stock':
         if functionName == 'get_stock':
             stock.get_stock(jsonLoad)
+        elif functionName == 'get_delivery':
+            stock.get_delivery(jsonLoad, "Livraison Magasin")
+        elif functionName == 'get_resupply':
+            stock.get_delivery(jsonLoad, "Commande Fournisseur")
 
     elif fromApp == 'gestion-magasin':
         if functionName == 'get_stock_magasin':

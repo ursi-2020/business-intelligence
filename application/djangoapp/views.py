@@ -45,16 +45,18 @@ def tickets(request):
 
 
 def stock(request):
-    clock_time = api.send_request('scheduler', 'clock/time')
-    now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
-    stocks = Stock.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
+    #clock_time = api.send_request('scheduler', 'clock/time')
+    #now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    #stocks = Stock.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
+    stocks = Stock.objects.all()
     return render(request, "stock.html", {'stocks': stocks})
 
 
 def stock_magasin(request):
-    clock_time = api.send_request('scheduler', 'clock/time')
-    now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
-    stocks = StockMagasin.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
+    #clock_time = api.send_request('scheduler', 'clock/time')
+    #now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    #stocks = StockMagasin.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
+    stocks = Stock.objects.all()
     return render(request, "stock_magasin.html", {'stocks': stocks})
 
 

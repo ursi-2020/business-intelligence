@@ -61,3 +61,12 @@ class StockMagasin(models.Model):
     numeroFournisseur = models.IntegerField()
     codeFournisseur = models.CharField(max_length=200)
     stockDisponible = models.IntegerField()
+
+class Delivery(models.Model):
+    type = models.CharField(max_length=200)
+    idCommande = models.CharField(max_length=200)
+
+class DeliveredProduct(models.Model):
+    codeProduit = models.CharField(max_length=200)
+    quantite = models.IntegerField(default=0)
+    delivery = models.ForeignKey('Delivery', related_name='delivered_product', on_delete=models.CASCADE)

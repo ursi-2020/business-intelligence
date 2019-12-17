@@ -13,9 +13,17 @@ from django.views.decorators.csrf import csrf_exempt
 
 myappurl = "http://localhost:" + os.environ["WEBSERVER_PORT"]
 
-
-def get_delivery(deliveryJSON):
-    print("ferme ta gueule")
+def get_delivery(jsonLoad, type):
+    body = json.loads(jsonLoad["body"].replace("\'", "\""))
+    for delivery in body["delivery"]:
+        new_delivery = Delivery(type=type, idCommande=delivery["idCommande"])
+        new_delivery.save()
+        if delivery['produits'] != '':
+            for produit in delivery['articles']:
+                new_produit = DeliveredProduct(codeProduit=produit['codeProduit'],
+                                               quantite=produit['prixAvant'],
+                                               delivery=new_delivery)
+                new_produit.save()
 
 
 def get_resupply(resupplyJSON):
