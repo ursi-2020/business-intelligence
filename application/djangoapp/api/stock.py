@@ -15,6 +15,7 @@ myappurl = "http://localhost:" + os.environ["WEBSERVER_PORT"]
 
 def get_delivery(jsonLoad, type):
     body = json.loads(jsonLoad["body"].replace("\'", "\""))
+    print(jsonLoad);
     for delivery in body["delivery"]:
         new_delivery = Delivery(type=type, idCommande=delivery["idCommande"])
         new_delivery.save()
