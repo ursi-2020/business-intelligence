@@ -26,10 +26,6 @@ def get_delivery(jsonLoad, type):
                 new_produit.save()
 
 
-def get_resupply(resupplyJSON):
-    print("ferme ta gueule")
-
-
 def get_stock(jsonLoad):
     body = json.loads(jsonLoad["body"].replace("\'", "\""))
     clock_time = api.send_request('scheduler', 'clock/time')

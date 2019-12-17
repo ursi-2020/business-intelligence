@@ -26,7 +26,8 @@ urlpatterns = [
     path('gestion-stock', views.stock, name='stock'),
     path('gestion-magasin', views.stock_magasin, name='stock_magasin'),
     path('ask_for_stock', stock.ask_for_stock, name='ask_for_stock'),
-    path('ask_for_magasin_stock', magasin.ask_for_magasin_stock, name='ask_for_magasin_stock')
+    path('ask_for_magasin_stock', magasin.ask_for_magasin_stock, name='ask_for_magasin_stock'),
+    path('deliveries', views.deliveries, name='deliveries')
 ]
 
 urlpatterns += staticfiles_urlpatterns()

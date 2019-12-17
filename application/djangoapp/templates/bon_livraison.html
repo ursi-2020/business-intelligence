@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block content %}
+
+    {% load static %}
+
+    <div class="container-fluid  dashboard-content">
+        <h5>Bons de livraison</h5>
+        <table id="table" class="table table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Type de bon</th>
+                <th scope="col">Identifiant commande</th>
+                <th scope="col">Produits</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for delivery in deliveries %}
+                <tr>
+                    <td>{{ delivery.DateTicket }}</td>
+                    <td>{{ delivery.Prix }}</td>
+                    <td>{{ delivery.ModePaiement }}</td>
+                    <td>
+                        <ul>
+                            {% for product in deliveredProducts %}
+                                {% if product.delivery.id == delivery.id %}
+                                    <li>
+                                        {{ product.quantite }} - {{ product.codeProduit }}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="{% static 'assets/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/charts/charts-bundle/Chart.bundle.js' %}"></script>
+    <script src="{% static 'assets/vendor/charts/charts-bundle/chartjs.js' %}"></script>
+
+{% endblock %}

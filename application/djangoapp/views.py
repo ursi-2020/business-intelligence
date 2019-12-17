@@ -56,8 +56,13 @@ def stock_magasin(request):
     #clock_time = api.send_request('scheduler', 'clock/time')
     #now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     #stocks = StockMagasin.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
-    stocks = Stock.objects.all()
+    stocks = StockMagasin.objects.all()
     return render(request, "stock_magasin.html", {'stocks': stocks})
+
+def deliveries(request):
+    deliveries = Delivery.objects.all()
+    deliveredProducts = DeliveredProduct.objects.all()
+    return render(request, "bon_livraison.html", {'deliveries': deliveries, 'deliveredProducts': deliveredProducts})
 
 
 @csrf_exempt
