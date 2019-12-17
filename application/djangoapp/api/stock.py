@@ -14,17 +14,19 @@ from django.views.decorators.csrf import csrf_exempt
 myappurl = "http://localhost:" + os.environ["WEBSERVER_PORT"]
 
 def get_delivery(jsonLoad, type):
-    body = json.loads(jsonLoad["body"].replace("\'", "\""))
-    print(jsonLoad);
-    for delivery in body["delivery"]:
-        new_delivery = Delivery(type=type, idCommande=delivery["idCommande"])
-        new_delivery.save()
-        if delivery['produits'] != '':
-            for produit in delivery['articles']:
-                new_produit = DeliveredProduct(codeProduit=produit['codeProduit'],
-                                               quantite=produit['prixAvant'],
-                                               delivery=new_delivery)
-                new_produit.save()
+    if not isinstance(jsonLoad["body"], dict):
+        delivery = json.loads(jsonLoad["body"].replace("\'", "\""))
+    else:
+        delivery = jsonLoad["body"]
+    print(jsonLoad)
+    delivery = Delivery(type=type, idCommande=delivery["idCommande"])
+    delivery.save()
+    if delivery['produits'] != '':
+        for produit in delivery['produits']:
+            new_produit = DeliveredProduct(codeProduit=produit['codeProduit'],
+                                           quantite=produit['prixAvant'],
+                                           delivery=delivery)
+            new_produit.save()
 
 
 def get_stock(jsonLoad):
