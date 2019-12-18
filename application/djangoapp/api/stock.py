@@ -19,14 +19,13 @@ def get_delivery(jsonLoad, type):
     else:
         delivery = jsonLoad["body"]
     print(jsonLoad)
-    delivery = Delivery(type=type, idCommande=delivery["idCommande"])
-    delivery.save()
-    if delivery['produits'] != '':
-        for produit in delivery['produits']:
-            new_produit = DeliveredProduct(codeProduit=produit['codeProduit'],
-                                           quantite=produit['prixAvant'],
-                                           delivery=delivery)
-            new_produit.save()
+    deliv = Delivery(type=type, idCommande=delivery["idCommande"])
+    deliv.save()
+    for produit in delivery['produits']:
+        new_produit = DeliveredProduct(codeProduit=produit['codeProduit'],
+                                       quantite=produit['quantite'],
+                                       delivery=deliv)
+        new_produit.save()
 
 
 def get_stock(jsonLoad):

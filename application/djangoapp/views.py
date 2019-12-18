@@ -62,6 +62,8 @@ def stock_magasin(request):
 def deliveries(request):
     deliveries = Delivery.objects.all()
     deliveredProducts = DeliveredProduct.objects.all()
+    print(deliveries)
+    print(deliveredProducts)
     return render(request, "bon_livraison.html", {'deliveries': deliveries, 'deliveredProducts': deliveredProducts})
 
 
