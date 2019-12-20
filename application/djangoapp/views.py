@@ -12,6 +12,7 @@ import requests
 
 from django.utils.dateparse import parse_datetime
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 from .forms import *
 
@@ -34,12 +35,17 @@ def crm(request):
 
 
 def tickets(request):
-    tickets = Ticket.objects.all()
+    tickets_list = Ticket.objects.all()
+    paginator = Paginator(tickets_list, 10) # Show 25 contacts per page
+    page = request.GET.get('page')
+    tickets = paginator.get_page(page)
+
     chiffre_affaire = 0
     for ticket in tickets:
         ticket.Prix = ticket.Prix / 100
         chiffre_affaire = chiffre_affaire + ticket.Prix
     purchasedArticles = PurchasedArticle.objects.all()
+
     return render(request, "tickets.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles,
                                             'chiffre_affaire': round(chiffre_affaire, 2)})
 
@@ -62,8 +68,6 @@ def stock_magasin(request):
 def deliveries(request):
     deliveries = Delivery.objects.all()
     deliveredProducts = DeliveredProduct.objects.all()
-    print(deliveries)
-    print(deliveredProducts)
     return render(request, "bon_livraison.html", {'deliveries': deliveries, 'deliveredProducts': deliveredProducts})
 
 
@@ -83,9 +87,7 @@ def get_catalogue(request):
 @csrf_exempt
 def get_crm(request):
     crm_request = api.send_request('crm', 'api/data')
-    print(crm_request)
     json_data = json.loads(crm_request)
-    print(json_data)
     for customer in json_data:
         if not Customer.objects.filter(Compte=customer['Compte']).exists():
             new_customer = Customer(Prenom=customer['Prenom'], Nom=customer['Nom'], carteFid=customer['IdClient'],
@@ -99,9 +101,7 @@ def get_tickets(request):
     crm_tickets_request = api.send_request('crm', 'api/get_tickets')
     if crm_tickets_request:
         json_data = json.loads(crm_tickets_request)
-        print(json_data)
         for ticket in json_data['tickets']:
-            print()
             new_ticket = Ticket(DateTicket=datetime.strptime(ticket['date'], '%Y-%m-%d'), Prix=ticket['prix'],
                                 Client=ticket['client'],
                                 PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'])
@@ -165,8 +165,6 @@ def schedule_task(host, url, time, recurrence, data, source, name):
     data = {"target_url": url, "target_app": host, "time": time_str, "recurrence": recurrence, "data": data,
             "source_app": source, "name": name}
     r = requests.post(api.api_services_url + 'schedule/add', headers=headers, json=data)
-    print(r.status_code)
-    print(r.text)
     return r.text
 
 
@@ -186,9 +184,6 @@ def get_recent_tickets_data(request):
 
     promotions = PurchasedArticle.objects.exclude(promo=0)
     classics = PurchasedArticle.objects.filter(promo=0)
-
-    for prom in promotions:
-        print(prom.ticket.DateTicket)
 
     for prom in promotions:
         elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - prom.ticket.DateTicket
