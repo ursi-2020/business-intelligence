@@ -38,6 +38,23 @@
 							<td>{{ product.packaging }}</td>
 						</tr>
 					{% endfor %}
+					<div class="pagination">
+	                    <span class="step-links">
+	                        {% if products.has_previous %}
+	                            <a href="?page=1">&laquo; first</a>
+	                            <a href="?page={{ contacts.previous_page_number }}">previous</a>
+	                        {% endif %}
+
+	                        <span class="current">
+	                            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+	                        </span>
+
+	                        {% if products.has_next %}
+	                            <a href="?page={{ contacts.next_page_number }}">next</a>
+	                            <a href="?page={{ contacts.paginator.num_pages }}">last &raquo;</a>
+	                        {% endif %}
+	                    </span>
+                	</div>
 				</tbody>
 			</table>	
 	 	</div>

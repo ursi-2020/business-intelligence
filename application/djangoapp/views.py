@@ -24,12 +24,18 @@ def index(request):
 
 
 def catalogue_produit(request):
-    products = Produit.objects.all()
+    products_list = Produit.objects.all()
+    paginator = Paginator(products_list, 10) # Show 25 contacts per page
+    page = request.GET.get('page')
+    products = paginator.get_page(page)
     return render(request, "catalogue_produit.html", {'products': products})
 
 
 def crm(request):
-    customers = Customer.objects.all()
+    customers_list = Customer.objects.all()
+    paginator = Paginator(customers_list, 10) # Show 25 contacts per page
+    page = request.GET.get('page')
+    customers = paginator.get_page(page)
     fidcustomers = sum(1 for i in customers if i.Compte != "")
     return render(request, "crm.html", {'customers': customers, 'fidcustomers': fidcustomers})
 
@@ -54,7 +60,10 @@ def stock(request):
     #clock_time = api.send_request('scheduler', 'clock/time')
     #now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     #stocks = Stock.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
-    stocks = Stock.objects.all().order_by('-date')
+    stocks_list = Stock.objects.all().order_by('-date')
+    paginator = Paginator(stocks_list, 10) # Show 25 contacts per page
+    page = request.GET.get('page')
+    stocks = paginator.get_page(page)
     return render(request, "stock.html", {'stocks': stocks})
 
 
@@ -62,12 +71,18 @@ def stock_magasin(request):
     #clock_time = api.send_request('scheduler', 'clock/time')
     #now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     #stocks = StockMagasin.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
-    stocks = StockMagasin.objects.all().order_by('-date')
+    stocks_list = StockMagasin.objects.all().order_by('-date')
+    paginator = Paginator(stocks_list, 10) # Show 25 contacts per page
+    page = request.GET.get('page')
+    stocks = paginator.get_page(page)
     return render(request, "stock_magasin.html", {'stocks': stocks})
 
 def deliveries(request):
-    deliveries = Delivery.objects.all()
+    deliveries_list = Delivery.objects.all()
     deliveredProducts = DeliveredProduct.objects.all()
+    paginator = Paginator(deliveries_list, 10) # Show 25 contacts per page
+    page = request.GET.get('page')
+    deliveries = paginator.get_page(page)
     return render(request, "bon_livraison.html", {'deliveries': deliveries, 'deliveredProducts': deliveredProducts})
 
 
