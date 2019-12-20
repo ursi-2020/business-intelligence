@@ -24,12 +24,12 @@ class Customer(models.Model):
     Nom = models.CharField(max_length=200)
     Prenom = models.CharField(max_length=200)
     Credit = models.DecimalField(default=0, max_digits=6, decimal_places=2)
-    Paiement = models.IntegerField(default=0)
+    Montant = models.IntegerField(default=0)
     Compte = models.CharField(max_length=10, default="")
-    carteFid = models.IntegerField(default=-1)
+    carteFid = models.CharField(max_length=200)
 
     def __str__(self):
-        return 'Customer: {}'.format(self.firstName, self.lastName, self.fidelityPoint, self.payment, self.account)
+        return 'Customer: {}'.format(self.firstName, self.lastName, self.fidelityPoint, self.montant, self.account)
 
 
 class PurchasedArticle(models.Model):

@@ -18,7 +18,6 @@ def get_delivery(jsonLoad, type):
         delivery = json.loads(jsonLoad["body"].replace("\'", "\""))
     else:
         delivery = jsonLoad["body"]
-    print(jsonLoad)
     deliv = Delivery(type=type, idCommande=delivery["idCommande"])
     deliv.save()
     for produit in delivery['produits']:

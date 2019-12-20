@@ -48,7 +48,7 @@ def stock(request):
     #clock_time = api.send_request('scheduler', 'clock/time')
     #now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     #stocks = Stock.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
-    stocks = Stock.objects.all()
+    stocks = Stock.objects.all().order_by('-date')
     return render(request, "stock.html", {'stocks': stocks})
 
 
@@ -56,7 +56,7 @@ def stock_magasin(request):
     #clock_time = api.send_request('scheduler', 'clock/time')
     #now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     #stocks = StockMagasin.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
-    stocks = StockMagasin.objects.all()
+    stocks = StockMagasin.objects.all().order_by('-date')
     return render(request, "stock_magasin.html", {'stocks': stocks})
 
 def deliveries(request):
@@ -88,8 +88,8 @@ def get_crm(request):
     print(json_data)
     for customer in json_data:
         if not Customer.objects.filter(Compte=customer['Compte']).exists():
-            new_customer = Customer(Prenom=customer['Prenom'], Nom=customer['Nom'], carteFid=customer['carteFid'],
-                                    Credit=customer['Credit'], Paiement=customer['Paiement'], Compte=customer['Compte'])
+            new_customer = Customer(Prenom=customer['Prenom'], Nom=customer['Nom'], carteFid=customer['IdClient'],
+                                    Credit=customer['Credit'], Montant=customer['Montant'], Compte=customer['Compte'])
             new_customer.save()
     return crm(request)
 

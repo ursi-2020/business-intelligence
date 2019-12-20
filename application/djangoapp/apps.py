@@ -31,6 +31,22 @@ def schedule_entrepot_stock(time):
     name = "BI : Ask for Stock"
     api.schedule_task(target_app, target_url, time, 'day', data, source_app, name)
 
+def schedule_client(time):
+    target_app = 'business-intelligence'
+    target_url = 'get_crm'
+    data = '{}'
+    source_app = "business-intelligence"
+    name = "BI : Get Clients"
+    api.schedule_task(target_app, target_url, time, 'day', data, source_app, name)
+
+def schedule_catalogue(time):
+    target_app = 'business-intelligence'
+    target_url = 'get_catalogue'
+    data = '{}'
+    source_app = "business-intelligence"
+    name = "BI : Get Catalogue"
+    api.schedule_task(target_app, target_url, time, 'day', data, source_app, name)
+
 class ApplicationConfig(AppConfig):
     name = 'application.djangoapp'
 
@@ -42,6 +58,8 @@ class ApplicationConfig(AppConfig):
             clock_time = api.send_request('scheduler', 'clock/time')
             time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
             time = time + timedelta(seconds=180)
-            #schedule_tickets(time)
+            schedule_client(time)
+            schedule_catalogue(time)
+            schedule_tickets(time)
             schedule_magasin_stock(time)
             schedule_entrepot_stock(time)

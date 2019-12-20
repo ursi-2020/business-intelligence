@@ -21,7 +21,7 @@
 					<th scope="col">Prénom</th>
 					<th scope="col">Nom</th>
 					<th scope="col">Point de fidélité</th>
-					<th scope="col">Paiement</th>
+					<th scope="col">Montant des paiements</th>
                     <th scope="col">Carte de Fidélité</th>
 				</tr>
 			</thead>
@@ -31,7 +31,7 @@
 						<td>{{ customer.Prenom}}</td>
 						<td>{{ customer.Nom }}</td>
 						<td>{{ customer.Credit }}</td>
-						<td>{{ customer.Paiement }}</td>
+						<td>{{ customer.Montant }}</td>
                         <td>{{ customer.carteFid }}</td>
                     </tr>
 				{% endfor %}
