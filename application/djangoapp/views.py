@@ -40,10 +40,7 @@ def tickets(request):
     page = request.GET.get('page')
     tickets = paginator.get_page(page)
 
-    chiffre_affaire = 0
-    for ticket in tickets:
-        ticket.Prix = ticket.Prix / 100
-        chiffre_affaire = chiffre_affaire + ticket.Prix
+    chiffre_affaire = 0 # A fix avec la nouvelle methode de chiffre d'affaire
     purchasedArticles = PurchasedArticle.objects.all()
 
     return render(request, "tickets.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles,
@@ -98,7 +95,8 @@ def get_crm(request):
 
 @csrf_exempt
 def get_tickets(request):
-    crm_tickets_request = api.send_request('crm', 'api/get_tickets')
+    crm_tickets_request = api.send_request('crm', 'api/get_tickets/bi')
+    chiffre_affaire = 0 # A fix en gettant le dernier CA
     if crm_tickets_request:
         json_data = json.loads(crm_tickets_request)
         for ticket in json_data['tickets']:
@@ -113,6 +111,8 @@ def get_tickets(request):
                                                    promo=article['promo'], quantity=article['quantity'],
                                                    ticket=new_ticket)
                     new_article.save()
+    new_ca = Result(type="CHIFFRE_AFFAIRE", value=chiffre_affaire, date=datetime.now())
+    new_ca.save()
     return tickets(request)
 
 

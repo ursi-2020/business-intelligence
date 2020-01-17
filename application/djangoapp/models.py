@@ -70,3 +70,8 @@ class DeliveredProduct(models.Model):
     codeProduit = models.CharField(max_length=200)
     quantite = models.IntegerField(default=0)
     delivery = models.ForeignKey('Delivery', related_name='delivered_product', on_delete=models.CASCADE)
+
+class Result(models.Model):
+    type = models.CharField(max_length=200)
+    value = models.IntegerField(default=0)
+    date = models.DateField(blank=True, null=True)
