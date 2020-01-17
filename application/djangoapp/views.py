@@ -104,6 +104,7 @@ def get_tickets(request):
                                 Client=ticket['client'],
                                 PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'])
             new_ticket.save()
+            chiffre_affaire += ticket['prix']
             if ticket['articles'] != '':
                 for article in ticket['articles']:
                     new_article = PurchasedArticle(codeProduit=article['codeProduit'],
