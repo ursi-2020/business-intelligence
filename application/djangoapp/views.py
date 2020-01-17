@@ -46,7 +46,12 @@ def tickets(request):
     page = request.GET.get('page')
     tickets = paginator.get_page(page)
 
-    chiffre_affaire = 0 # A fix avec la nouvelle methode de chiffre d'affaire
+    ca = Result.objects.filter(type='CA').last()
+    if not ca:
+        chiffre_affaire = 0
+    else:
+        chiffre_affaire = ca.value
+
     purchasedArticles = PurchasedArticle.objects.all()
 
     return render(request, "tickets.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles,
@@ -111,7 +116,13 @@ def get_crm(request):
 @csrf_exempt
 def get_tickets(request):
     crm_tickets_request = api.send_request('crm', 'api/get_tickets/bi')
-    chiffre_affaire = 0 # A fix en gettant le dernier CA
+
+    ca = Result.objects.filter(type='CA').last()
+    if not ca:
+        chiffre_affaire = 0
+    else:
+        chiffre_affaire = ca.value
+
     if crm_tickets_request:
         json_data = json.loads(crm_tickets_request)
         for ticket in json_data['tickets']:
