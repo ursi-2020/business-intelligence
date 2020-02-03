@@ -41,7 +41,8 @@ def crm(request):
 
 
 def tickets(request):
-    tickets_list = Ticket.objects.all()
+    tickets_list = Ticket.objects.all().order_by('-DateTicket')
+    print(Ticket.objects.count())
     paginator = Paginator(tickets_list, 10) # Show 25 contacts per page
     page = request.GET.get('page')
     tickets = paginator.get_page(page)
@@ -55,7 +56,7 @@ def tickets(request):
     purchasedArticles = PurchasedArticle.objects.all()
 
     return render(request, "tickets.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles,
-                                            'chiffre_affaire': round(chiffre_affaire, 2)})
+                                            'chiffre_affaire': round(chiffre_affaire, 2), 'ticket_count': Ticket.objects.count()})
 
 
 def stock(request):
@@ -126,9 +127,10 @@ def get_tickets(request):
     if crm_tickets_request:
         json_data = json.loads(crm_tickets_request)
         for ticket in json_data['tickets']:
+            print("Date = " + ticket['date'])
             new_ticket = Ticket(DateTicket=datetime.strptime(ticket['date'], '%Y-%m-%d'), Prix=ticket['prix'],
                                 Client=ticket['client'],
-                                PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'])
+                                PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'], Origin=ticket['origin'])
             new_ticket.save()
             chiffre_affaire += ticket['prix']
             if ticket['articles'] != '':

@@ -11,7 +11,7 @@
                     <h5 class="card-header">Tickets</h5>
                     <div class="card-body">
                         <div class="metric-value d-inline-block">
-                            <h1 class="mb-1">{{ tickets.count }}</h1>
+                            <h1 class="mb-1">{{ ticket_count }}</h1>
                         </div>
                         <div class="metric-label d-inline-block float-right text-success font-weight-bold">
                         <span class="icon-circle-small icon-box-xs text-success bg-success-light"><i
@@ -52,6 +52,7 @@
                 <th scope="col">Client</th>
                 <th scope="col">Points fidélités</th>
                 <th scope="col">Mode paiement</th>
+                <th scope="col">Origine</th>
                 <th scope="col">Articles</th>
             </tr>
             </thead>
@@ -63,6 +64,7 @@
                         <td>{{ ticket.Client }}</td>
                         <td>{{ ticket.PointsFidelite }}</td>
                         <td>{{ ticket.ModePaiement }}</td>
+                        <td>{{ ticket.Origin }}</td>
                         <td>
                             <ul>
                                 {% for article in purchasedArticles %}

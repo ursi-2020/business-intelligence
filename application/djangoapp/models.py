@@ -46,6 +46,7 @@ class Ticket(models.Model):
     Client = models.TextField(blank=False)
     PointsFidelite = models.IntegerField(default=0)
     ModePaiement = models.CharField(max_length=10)
+    Origin = models.CharField(default="rien", max_length=200)
 
 class Stock(models.Model):
     date = models.DateField(blank=True, null=True)
