@@ -56,7 +56,7 @@ def tickets(request):
     if not cout:
         benefice = 0
     else:
-        benefice = cout.value - chiffre_affaire
+        benefice = chiffre_affaire - cout.value
 
     purchasedArticles = PurchasedArticle.objects.all()
 
