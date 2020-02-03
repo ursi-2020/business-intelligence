@@ -56,7 +56,7 @@ def tickets(request):
     purchasedArticles = PurchasedArticle.objects.all()
 
     return render(request, "tickets.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles,
-                                            'chiffre_affaire': round(chiffre_affaire, 2), 'ticket_count': Ticket.objects.count()})
+                                            'chiffre_affaire': round(chiffre_affaire/100, 2), 'ticket_count': Ticket.objects.count()})
 
 
 def stock(request):
