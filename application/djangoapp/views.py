@@ -88,6 +88,12 @@ def deliveries(request):
     deliveries = paginator.get_page(page)
     return render(request, "bon_livraison.html", {'deliveries': deliveries, 'deliveredProducts': deliveredProducts})
 
+def incidents(request):
+    incidents_list = Incident.objects.all()
+    paginator = Paginator(incidents_list, 10)
+    page = request.GET.get('page')
+    incidents = paginator.get_page(page)
+    return render(request, 'incidents.html', {'incidents': incidents})
 
 @csrf_exempt
 def get_catalogue(request):
@@ -144,11 +150,27 @@ def get_tickets(request):
     new_ca.save()
     return tickets(request)
 
+@csrf_exempt
+def get_incidents(request):
+    gestion_paiement_incidents_request = api.send_request('gestion-paiement', 'api/incidents')
+
+    if gestion_paiement_incidents_request:
+        json_data = json.loads(gestion_paiement_incidents_request)
+        for incident in json_data:
+            new_incident = Incident(client_id=incident['client_id'], amount=incident['amount'], date=['date'])
+            new_incident.save()
+    return incidents(request)        
+
+
 
 def delete_tickets(request):
     PurchasedArticle.objects.all().delete()
     Ticket.objects.all().delete()
     return tickets(request)
+
+def delete_incidents(request):
+    Incident.objects.all().delete() 
+    return incidents(request)   
 
 
 def delete_catalogue_produit(request):
@@ -187,6 +209,13 @@ def scheduler_tickets(request):
                   'automatic_fetch_gestion-magasin_db')
     return magasin(request)
 
+def scheduler_incidents(request):
+    clock_time = api.send_request('scheduler', 'clock/time')
+    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    time = time + timedelta(seconds=180)
+    schedule_task('business-intelligence', 'get_incidents', time, 'day', '{}', 'business-intelligence',
+                  'automatic_fetch_gestion-magasin_db')
+    return incidents(request)
 
 def schedule_task(host, url, time, recurrence, data, source, name):
     time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
