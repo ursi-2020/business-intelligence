@@ -1,0 +1,54 @@
+{% extends 'index.html' %}
+{% block content %}
+
+    {% load static %}
+
+    <div class="container-fluid  dashboard-content">
+        <h5>Incidents</h5>
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Client id</th>
+                <th scope="col">Montant</th>
+                <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for incident in incidents %}
+                <tr>
+                    <td>{{ incident.client_id }}</td>
+                    <td>{{ incident.amount }}</td>
+                    <td>{{ incident.date }}</td>
+                </tr>
+            {% endfor %}
+            <div class="pagination">
+                    <span class="step-links">
+                        {% if incidents.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ contacts.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ incidents.number }} of {{ incidents.paginator.num_pages }}.
+                        </span>
+
+                        {% if incidents.has_next %}
+                            <a href="?page={{ contacts.next_page_number }}">next</a>
+                            <a href="?page={{ contacts.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+            </div>
+            </tbody>
+        </table>
+    </div>
+
+    <a class="btn btn-primary" href="{% url 'business-intelligence:get_incidents' %}">Update</a>
+    <a class="btn btn-primary" href="{% url 'business-intelligence:delete_incidents' %}">Delete Incident DB</a>
+    <a class="btn btn-primary" href="{% url 'business-intelligence:scheduler_incidents' %}">Automatically update Incident
+        DB</a>
+
+    <script src="{% static 'assets/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/charts/charts-bundle/Chart.bundle.js' %}"></script>
+    <script src="{% static 'assets/vendor/charts/charts-bundle/chartjs.js' %}"></script>
+
+{% endblock %}

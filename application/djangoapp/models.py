@@ -75,3 +75,11 @@ class Result(models.Model):
     type = models.CharField(max_length=200)
     value = models.IntegerField(default=0)
     date = models.DateField(blank=True, null=True)
+
+class Incident(models.Model):
+    client_id = models.TextField()
+    amount = models.IntegerField(default=0)
+    date = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return 'Incident: {}'.format(self.date)
