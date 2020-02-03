@@ -46,7 +46,7 @@ def tickets(request):
     page = request.GET.get('page')
     tickets = paginator.get_page(page)
 
-    ca = Result.objects.filter(type='CA').last()
+    ca = Result.objects.filter(type='CHIFFRE_AFFAIRE').last()
     if not ca:
         chiffre_affaire = 0
     else:
@@ -117,7 +117,7 @@ def get_crm(request):
 def get_tickets(request):
     crm_tickets_request = api.send_request('crm', 'api/get_tickets/bi')
 
-    ca = Result.objects.filter(type='CA').last()
+    ca = Result.objects.filter(type='CHIFFRE_AFFAIRE').last()
     if not ca:
         chiffre_affaire = 0
     else:
