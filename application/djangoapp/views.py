@@ -52,10 +52,17 @@ def tickets(request):
     else:
         chiffre_affaire = ca.value
 
+    cout = Result.objects.filter(type='COUT').last()
+    if not cout:
+        benefice = 0
+    else:
+        benefice = cout.value - chiffre_affaire
+
     purchasedArticles = PurchasedArticle.objects.all()
 
     return render(request, "tickets.html", {'tickets': tickets, 'purchasedArticles': purchasedArticles,
-                                            'chiffre_affaire': round(chiffre_affaire/100, 2), 'ticket_count': Ticket.objects.count()})
+                                            'chiffre_affaire': round(chiffre_affaire/100, 2), 'ticket_count': Ticket.objects.count(),
+                                            'benefice': round(benefice/100, 2)})
 
 
 def stock(request):

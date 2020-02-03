@@ -84,3 +84,16 @@ class Incident(models.Model):
 
     def __str__(self):
         return 'Incident: {}'.format(self.date)
+
+class Facture(models.Model):
+    numeroFacture = models.CharField(max_length=200)
+    dateFacture = models.DateField(blank=True, null=True)
+    datePaiement = models.DateField(blank=True, null=True)
+    numeroCommande = models.CharField(max_length=200)
+    dateLivraison = models.DateField(blank=True, null=True)
+
+class FactureItem(models.Model):
+    codeProduit = models.CharField(max_length=200)
+    prix = models.IntegerField(default=0)
+    quantite = models.IntegerField(default=0)
+    facture = models.ForeignKey('Facture', related_name='facture_item', on_delete=models.CASCADE)
