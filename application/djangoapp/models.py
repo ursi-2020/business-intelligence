@@ -23,7 +23,7 @@ class Customer(models.Model):
     IdClient = models.TextField(blank=False)
     Nom = models.CharField(max_length=200)
     Prenom = models.CharField(max_length=200)
-    Credit = models.DecimalField(default=0, max_digits=6, decimal_places=2)
+    Credit = models.IntegerField(default=0)
     Montant = models.IntegerField(default=0)
     Compte = models.CharField(max_length=10, default="")
     carteFid = models.CharField(max_length=200)
