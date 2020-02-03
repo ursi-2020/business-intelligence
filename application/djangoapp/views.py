@@ -42,7 +42,6 @@ def crm(request):
 
 def tickets(request):
     tickets_list = Ticket.objects.all().order_by('-DateTicket')
-    print(Ticket.objects.count())
     paginator = Paginator(tickets_list, 10) # Show 25 contacts per page
     page = request.GET.get('page')
     tickets = paginator.get_page(page)
@@ -89,7 +88,7 @@ def deliveries(request):
     return render(request, "bon_livraison.html", {'deliveries': deliveries, 'deliveredProducts': deliveredProducts})
 
 def incidents(request):
-    incidents_list = Incident.objects.all()
+    incidents_list = Incident.objects.all().order_by('-date')
     paginator = Paginator(incidents_list, 10)
     page = request.GET.get('page')
     incidents = paginator.get_page(page)
@@ -133,7 +132,6 @@ def get_tickets(request):
     if crm_tickets_request:
         json_data = json.loads(crm_tickets_request)
         for ticket in json_data['tickets']:
-            print("Date = " + ticket['date'])
             new_ticket = Ticket(DateTicket=datetime.strptime(ticket['date'], '%Y-%m-%d'), Prix=ticket['prix'],
                                 Client=ticket['client'],
                                 PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'], Origin=ticket['origin'])
@@ -152,14 +150,15 @@ def get_tickets(request):
 
 @csrf_exempt
 def get_incidents(request):
+    Incident.objects.all().delete()
     gestion_paiement_incidents_request = api.send_request('gestion-paiement', 'api/incidents')
 
     if gestion_paiement_incidents_request:
         json_data = json.loads(gestion_paiement_incidents_request)
         for incident in json_data:
-            new_incident = Incident(client_id=incident['client_id'], amount=incident['amount'], date=['date'])
+            new_incident = Incident(client_id=incident['client_id'], amount=incident['amount'], date=incident['date'])
             new_incident.save()
-    return incidents(request)        
+    return incidents(request)
 
 
 
