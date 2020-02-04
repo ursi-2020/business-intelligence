@@ -149,7 +149,7 @@ def get_tickets(request):
                 for article in ticket['articles']:
                     new_article = PurchasedArticle(codeProduit=article['codeProduit'],
                                                    prixAvant=article['prixAvant'], prixApres=article['prixApres'],
-                                                   promo=article['promo'], promo_client_produit=article['promo_client'],
+                                                   promo=article['promo'], promo_client_produit=article['promo_client_produit'],
                                                    quantity=article['quantity'], ticket=new_ticket)
                     new_article.save()
     new_ca = Result(type="CHIFFRE_AFFAIRE", value=chiffre_affaire, date=datetime.now())
