@@ -42,23 +42,31 @@
                             <h1 class="mb-1">{{ benefice }} €</h1>
                         </div>
                         <div class="metric-label d-inline-block float-right text-success font-weight-bold">
-                        {% if benefice > 0 %}
-                            <span class="icon-circle-small icon-box-xs text-success bg-success-light">
+                            {% if benefice > 0 %}
+                                <span class="icon-circle-small icon-box-xs text-success bg-success-light">
                                 <i class="fa fa-fw fa-arrow-up"></i></span><span class="ml-1"></span>
-                        {% else %}
-                            <span class="icon-circle-small icon-box-xs text-danger bg-danger-light">
+                            {% else %}
+                                <span class="icon-circle-small icon-box-xs text-danger bg-danger-light">
                                 <i class="fa fa-fw fa-arrow-down"></i></span><span class="ml-1"></span>
-                        {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-5 col-lg-6 col-md-6 col-sm-12 col-12">
-            <div class="card">
-                <h5 class="card-header">Vente de la semaine</h5>
-                <div class="card-body">
-                    <canvas id="myChart" width="400" height="400"></canvas>
+        <div class="row">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6">
+                <div class="card">
+                    <h5 class="card-header">Vente de la semaine - E-Commerce</h5>
+                    <div class="card-body">
+                        <canvas id="chart-ecommerce" width="400" height="400"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h5 class="card-header">Vente de la semaine - Magasin</h5>
+                    <div class="card-body">
+                        <canvas id="chart-magasin" width="400" height="400"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,28 +84,28 @@
             </tr>
             </thead>
             <tbody>
-                {% for ticket in tickets %}
-                    <tr>
-                        <td>{{ ticket.DateTicket }}</td>
-                        <td>{{ ticket.Prix }}</td>
-                        <td>{{ ticket.Client }}</td>
-                        <td>{{ ticket.PointsFidelite }}</td>
-                        <td>{{ ticket.ModePaiement }}</td>
-                        <td>{{ ticket.Origin }}</td>
-                        <td>
-                            <ul>
-                                {% for article in purchasedArticles %}
-                                    {% if article.ticket.id == ticket.id %}
-                                        <li>
-                                            {{ article.codeProduit }}
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </td>
-                    </tr>
-                {% endfor %}
-                <div class="pagination">
+            {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.DateTicket }}</td>
+                    <td>{{ ticket.Prix }}</td>
+                    <td>{{ ticket.Client }}</td>
+                    <td>{{ ticket.PointsFidelite }}</td>
+                    <td>{{ ticket.ModePaiement }}</td>
+                    <td>{{ ticket.Origin }}</td>
+                    <td>
+                        <ul>
+                            {% for article in purchasedArticles %}
+                                {% if article.ticket.id == ticket.id %}
+                                    <li>
+                                        {{ article.codeProduit }}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            <div class="pagination">
                     <span class="step-links">
                         {% if tickets.has_previous %}
                             <a href="?page=1">&laquo; first</a>
@@ -113,7 +121,7 @@
                             <a href="?page={{ tickets.paginator.num_pages }}">last &raquo;</a>
                         {% endif %}
                     </span>
-                </div>
+            </div>
             </tbody>
         </table>
     </div>
@@ -131,9 +139,9 @@
     <script src="{% static 'assets/vendor/datatables/js/dataTables.bootstrap4.min.js' %}"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#table').DataTable();
-        } );
+        });
 
         let datas = {};
         {% block jquery %}
@@ -144,15 +152,17 @@
                 url: endpoint,
                 success: function (data) {
                     console.log(data);
-                    let ctx = document.getElementById('myChart').getContext('2d');
-                    let myChart = new Chart(ctx, {
+                    let ecommerce = document.getElementById('chart-ecommerce').getContext('2d');
+                    let magasin = document.getElementById('chart-magasin').getContext('2d');
+
+                    let myChart = new Chart(ecommerce, {
                         type: 'line',
                         data: {
                             labels: data.jours,
                             datasets: [
                                 {
                                     label: 'Ventes en promotion',
-                                    data: data.promotions,
+                                    data: data.promotions_eCommerce,
                                     backgroundColor: 'rgba(255, 99, 132, 1)',
                                     borderColor: 'rgba(255, 99, 132, 1)',
                                     borderWidth: 1,
@@ -160,7 +170,7 @@
                                 },
                                 {
                                     label: 'Ventes hors promotion',
-                                    data: data.classics,
+                                    data: data.classics_eCommerce,
                                     backgroundColor: 'rgba(54, 162, 235, 1)',
                                     borderColor: 'rgba(54, 162, 235, 1)',
                                     borderWidth: 1,
@@ -168,7 +178,39 @@
                                 },
                                 {
                                     label: 'Ventes',
-                                    data: data.total,
+                                    data: data.total_eCommerce,
+                                    backgroundColor: 'rgb(65,235,0)',
+                                    borderColor: 'rgb(65,235,0)',
+                                    borderWidth: 1,
+                                    fill: false
+                                },
+                            ]
+                        }
+                    });
+                    let magasinChart = new Chart(magasin, {
+                        type: 'line',
+                        data: {
+                            labels: data.jours,
+                            datasets: [
+                                {
+                                    label: 'Ventes en promotion',
+                                    data: data.promotions_magasin,
+                                    backgroundColor: 'rgba(255, 99, 132, 1)',
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 1,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Ventes hors promotion',
+                                    data: data.classics_magasin,
+                                    backgroundColor: 'rgba(54, 162, 235, 1)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 1,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Ventes',
+                                    data: data.total_magasin,
                                     backgroundColor: 'rgb(65,235,0)',
                                     borderColor: 'rgb(65,235,0)',
                                     borderWidth: 1,

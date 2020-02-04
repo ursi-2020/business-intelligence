@@ -233,9 +233,14 @@ def schedule_task(host, url, time, recurrence, data, source, name):
 
 
 def get_recent_tickets_data(request):
-    nb_tot = [0, 0, 0, 0, 0, 0, 0];
-    nb_prom = [0, 0, 0, 0, 0, 0, 0];
-    nb_classic = [0, 0, 0, 0, 0, 0, 0];
+    eCommerce_tot = [0, 0, 0, 0, 0, 0, 0];
+    eCommerce_prom = [0, 0, 0, 0, 0, 0, 0];
+    eCommerce_classic = [0, 0, 0, 0, 0, 0, 0];
+
+    magasin_tot = [0, 0, 0, 0, 0, 0, 0];
+    magasin_prom = [0, 0, 0, 0, 0, 0, 0];
+    magasin_classic = [0, 0, 0, 0, 0, 0, 0];
+
     clock_time = api.send_request('scheduler', 'clock/time')
     now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     jours = [(now - timedelta(6)).strftime("%Y-%m-%d"),
@@ -246,31 +251,44 @@ def get_recent_tickets_data(request):
              (now - timedelta(1)).strftime("%Y-%m-%d"),
              now.strftime("%Y-%m-%d")]
 
-    promotions = PurchasedArticle.objects.exclude(promo=0)
-    classics = PurchasedArticle.objects.filter(promo=0)
+    eCommerces = PurchasedArticle.objects.filter(ticket__Origin="e-commerce")
+    magasins = PurchasedArticle.objects.filter(ticket__Origin="magasin")
 
-    for prom in promotions:
-        elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - prom.ticket.DateTicket
+    for eCommerce in eCommerces:
+        elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - eCommerce.ticket.DateTicket
         for i in range(7):
             if elapsed >= timedelta(days=i) and elapsed < timedelta(days=i + 1):
-                nb_prom[i] += 1
-    for classic in classics:
-        elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - classic.ticket.DateTicket
+                if not eCommerce.promo == 0:
+                    eCommerce_prom[i] += 1
+                else:
+                    eCommerce_classic[i] +=1
+    for magasin in magasins:
+        elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - magasin.ticket.DateTicket
         for i in range(7):
             if elapsed >= timedelta(days=i) and elapsed < timedelta(days=i + 1):
-                nb_classic[i] += 1
+                if not magasin.promo == 0:
+                    magasin_prom[i] += 1
+                else:
+                    magasin_classic[i] += 1
 
     for i in range(7):
-        nb_tot[i] = nb_prom[i] + nb_classic[i]
+        magasin_tot[i] = magasin_prom[i] + magasin_classic[i]
+        eCommerce_tot[i] = eCommerce_prom[i] + eCommerce_classic[i]
 
-    nb_prom.reverse()
-    nb_classic.reverse()
-    nb_tot.reverse()
+    eCommerce_prom.reverse()
+    eCommerce_classic.reverse()
+    eCommerce_tot.reverse()
+    magasin_prom.reverse()
+    magasin_classic.reverse()
+    magasin_tot.reverse()
 
     data = {
-        "promotions": nb_prom,
-        "classics": nb_classic,
-        "total": nb_tot,
+        "promotions_eCommerce": eCommerce_prom,
+        "classics_eCommerce": eCommerce_classic,
+        "total_eCommerce": eCommerce_tot,
+        "promotions_magasin": magasin_prom,
+        "classics_magasin": magasin_classic,
+        "total_magasin": magasin_tot,
         "jours": jours
     }
     return JsonResponse(data)
