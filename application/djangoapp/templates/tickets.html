@@ -163,7 +163,7 @@
                             labels: data.jours,
                             datasets: [
                                 {
-                                    label: 'Ventes en promotion',
+                                    label: 'Articles avec promotion',
                                     data: data.promotions_eCommerce,
                                     backgroundColor: 'rgba(255, 99, 132, 1)',
                                     borderColor: 'rgba(255, 99, 132, 1)',
@@ -171,7 +171,15 @@
                                     fill: false
                                 },
                                 {
-                                    label: 'Ventes hors promotion',
+                                    label: 'Articles avec promotion client',
+                                    data: data.promotions_clients_eCommerce,
+                                    backgroundColor: 'rgba(0, 106, 255, 1)',
+                                    borderColor: 'rgba(0, 106, 255, 1)',
+                                    borderWidth: 1,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Articles sans promotion',
                                     data: data.classics_eCommerce,
                                     backgroundColor: 'rgba(54, 162, 235, 1)',
                                     borderColor: 'rgba(54, 162, 235, 1)',
@@ -195,7 +203,7 @@
                             labels: data.jours,
                             datasets: [
                                 {
-                                    label: 'Ventes en promotion',
+                                    label: 'Articles avec promotion',
                                     data: data.promotions_magasin,
                                     backgroundColor: 'rgba(255, 99, 132, 1)',
                                     borderColor: 'rgba(255, 99, 132, 1)',
@@ -203,7 +211,15 @@
                                     fill: false
                                 },
                                 {
-                                    label: 'Ventes hors promotion',
+                                    label: 'Articles avec promotion client',
+                                    data: data.promotions_clients_magasin,
+                                    backgroundColor: 'rgba(0, 106, 255, 1)',
+                                    borderColor: 'rgba(0, 106, 255, 1)',
+                                    borderWidth: 1,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Articles sans promotion',
                                     data: data.classics_magasin,
                                     backgroundColor: 'rgba(54, 162, 235, 1)',
                                     borderColor: 'rgba(54, 162, 235, 1)',

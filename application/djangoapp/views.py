@@ -141,15 +141,16 @@ def get_tickets(request):
         for ticket in json_data['tickets']:
             new_ticket = Ticket(DateTicket=datetime.strptime(ticket['date'], '%Y-%m-%d'), Prix=ticket['prix'],
                                 Client=ticket['client'],
-                                PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'], Origin=ticket['origin'])
+                                PointsFidelite=ticket['pointsFidelite'], ModePaiement=ticket['modePaiement'],
+                                Promo_client=ticket['Promo_client'], Origin=ticket['origin'])
             new_ticket.save()
             chiffre_affaire += ticket['prix']
             if ticket['articles'] != '':
                 for article in ticket['articles']:
                     new_article = PurchasedArticle(codeProduit=article['codeProduit'],
                                                    prixAvant=article['prixAvant'], prixApres=article['prixApres'],
-                                                   promo=article['promo'], quantity=article['quantity'],
-                                                   ticket=new_ticket)
+                                                   promo=article['promo'], promo_client_produit=article['promo_client'],
+                                                   quantity=article['quantity'], ticket=new_ticket)
                     new_article.save()
     new_ca = Result(type="CHIFFRE_AFFAIRE", value=chiffre_affaire, date=datetime.now())
     new_ca.save()
@@ -235,10 +236,14 @@ def schedule_task(host, url, time, recurrence, data, source, name):
 def get_recent_tickets_data(request):
     eCommerce_tot = [0, 0, 0, 0, 0, 0, 0];
     eCommerce_prom = [0, 0, 0, 0, 0, 0, 0];
+    eCommerce_prom_client = [0, 0, 0, 0, 0, 0, 0];
+    eCommerce_prom_ticket = [0, 0, 0, 0, 0, 0, 0];
     eCommerce_classic = [0, 0, 0, 0, 0, 0, 0];
 
     magasin_tot = [0, 0, 0, 0, 0, 0, 0];
     magasin_prom = [0, 0, 0, 0, 0, 0, 0];
+    magasin_prom_client = [0, 0, 0, 0, 0, 0, 0];
+    magasin_prom_ticket = [0, 0, 0, 0, 0, 0, 0];
     magasin_classic = [0, 0, 0, 0, 0, 0, 0];
 
     clock_time = api.send_request('scheduler', 'clock/time')
@@ -258,35 +263,43 @@ def get_recent_tickets_data(request):
         elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - eCommerce.ticket.DateTicket
         for i in range(7):
             if elapsed >= timedelta(days=i) and elapsed < timedelta(days=i + 1):
-                if not eCommerce.promo == 0:
+                if eCommerce.promo > 0:
                     eCommerce_prom[i] += 1
-                else:
+                if eCommerce.promo_client_produit > 0:
+                    eCommerce_prom_client += 1
+                if eCommerce.promo < 0 and eCommerce.promo_client_produit < 0 and eCommerce.ticket.Promo_client < 0:
                     eCommerce_classic[i] +=1
+                eCommerce_tot[i] += 1
     for magasin in magasins:
         elapsed = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"').date() - magasin.ticket.DateTicket
         for i in range(7):
             if elapsed >= timedelta(days=i) and elapsed < timedelta(days=i + 1):
-                if not magasin.promo == 0:
-                    magasin_prom[i] += 1
-                else:
-                    magasin_classic[i] += 1
-
-    for i in range(7):
-        magasin_tot[i] = magasin_prom[i] + magasin_classic[i]
-        eCommerce_tot[i] = eCommerce_prom[i] + eCommerce_classic[i]
+                if magasin.promo > 0:
+                    magasin[i] += 1
+                if magasin.promo_client_produit > 0:
+                    magasin_prom_client += 1
+                if magasin.promo < 0 and magasin.promo_client_produit < 0 and magasin.ticket.Promo_client < 0:
+                    magasin_classic[i] +=1
+                magasin_tot[i] += 1
 
     eCommerce_prom.reverse()
+    eCommerce_prom_client.reverse()
     eCommerce_classic.reverse()
     eCommerce_tot.reverse()
+
     magasin_prom.reverse()
+    magasin_prom_client.reverse()
     magasin_classic.reverse()
     magasin_tot.reverse()
 
     data = {
         "promotions_eCommerce": eCommerce_prom,
+        "promotions_clients_eCommerce": eCommerce_prom_client,
         "classics_eCommerce": eCommerce_classic,
         "total_eCommerce": eCommerce_tot,
+
         "promotions_magasin": magasin_prom,
+        "promotions_clients_magasin": magasin_prom_client,
         "classics_magasin": magasin_classic,
         "total_magasin": magasin_tot,
         "jours": jours
