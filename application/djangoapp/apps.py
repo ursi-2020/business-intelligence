@@ -47,6 +47,14 @@ def schedule_catalogue(time):
     name = "BI : Get Catalogue"
     api.schedule_task(target_app, target_url, time, 'day', data, source_app, name)
 
+def schedule_incident(time):
+    target_app = 'business-intelligence'
+    target_url = 'get_incidents'
+    data = '{}'
+    source_app = "business-intelligence"
+    name = "BI : Get Incident"
+    api.schedule_task(target_app, target_url, time, 'day', data, source_app, name)
+
 class ApplicationConfig(AppConfig):
     name = 'application.djangoapp'
 
@@ -63,3 +71,4 @@ class ApplicationConfig(AppConfig):
             schedule_tickets(time)
             schedule_magasin_stock(time)
             schedule_entrepot_stock(time)
+            schedule_incident(time)

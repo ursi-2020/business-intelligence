@@ -15,9 +15,7 @@ class Produit(models.Model):
     quantiteMin = models.PositiveIntegerField()
     packaging = models.PositiveIntegerField()
     prix = models.PositiveIntegerField()
-
-    def __str__(self):
-        return 'Produit: {}'.format(self.codeProduit, self.familleProduit, self.descriptionProduit, self.quantiteMin, self.packaging, self.prix)
+    prixFournisseur = models.PositiveIntegerField(default=0)
 
 class Customer(models.Model):
     IdClient = models.TextField(blank=False)
@@ -27,10 +25,8 @@ class Customer(models.Model):
     Montant = models.IntegerField(default=0)
     Compte = models.CharField(max_length=10, default="")
     carteFid = models.CharField(max_length=200)
-
-    def __str__(self):
-        return 'Customer: {}'.format(self.firstName, self.lastName, self.fidelityPoint, self.montant, self.account)
-
+    Email = models.CharField(max_length=200, default="")
+    PanierMoyen = models.IntegerField(default=0)
 
 class PurchasedArticle(models.Model):
     codeProduit = models.CharField(max_length=200)

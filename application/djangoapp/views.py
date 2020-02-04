@@ -109,7 +109,7 @@ def get_catalogue(request):
         if not Produit.objects.filter(codeProduit=product["codeProduit"]).exists():
             new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"],
                                   descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"],
-                                  packaging=product["packaging"], prix=product["prix"])
+                                  packaging=product["packaging"], prix=product["prix"], prixFournisseur=product['prixFournisseur'])
             new_product.save()
     return catalogue_produit(request)
 
@@ -121,7 +121,8 @@ def get_crm(request):
     for customer in json_data:
         if not Customer.objects.filter(Compte=customer['Compte']).exists():
             new_customer = Customer(Prenom=customer['Prenom'], Nom=customer['Nom'], carteFid=customer['IdClient'],
-                                    Credit=customer['Credit'], Montant=customer['Montant'], Compte=customer['Compte'])
+                                    Credit=customer['Credit'], Montant=customer['Montant'], Compte=customer['Compte'],
+                                    Email=customer['Email'], PanierMoyen=customer['PanierMoyen'])
             new_customer.save()
     return crm(request)
 

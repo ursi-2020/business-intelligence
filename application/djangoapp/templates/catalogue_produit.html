@@ -22,7 +22,8 @@
 				<thead>
 					<tr>
 						<th scope="col">Code produit</th>
-						<th scope="col">Prix</th>
+						<th scope="col">Prix Fournisseur</th>
+                        <th scope="col">Prix</th>
 						<th scope="col">Famille Produit</th>
 						<th scope="col">Quantité</th>
 						<th scope="col">Packaging</th>
@@ -32,6 +33,7 @@
 					{% for product in products %}
 						<tr>
 							<td>{{ product.codeProduit}}</td>
+                            <td>{{ product.prixFournisseur }}</td>
 							<td>{{ product.prix }}</td>
 							<td>{{ product.familleProduit }}</td>
 							<td>{{ product.quantiteMin }}</td>
