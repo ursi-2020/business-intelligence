@@ -88,10 +88,17 @@ def stock_magasin(request):
     #now = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     #stocks = StockMagasin.objects.filter(date__year=now.year, date__month=now.month, date__day=now.day)
     stocks_list = StockMagasin.objects.all().order_by('-date')
+    val_stock = 0
+    if stocks_list:
+        date = stocks_list[0].date
+        daily_stocks = StockMagasin.objects.filter(date__gte=date)
+        for stock in daily_stocks:
+            produit = Produit.objects.get(codeProduit=stock.codeProduit)
+            val_stock = val_stock + (produit.prix * stock.stockDisponible)
     paginator = Paginator(stocks_list, 10) # Show 25 contacts per page
     page = request.GET.get('page')
     stocks = paginator.get_page(page)
-    return render(request, "stock_magasin.html", {'stocks': stocks})
+    return render(request, "stock_magasin.html", {'stocks': stocks, "val_stock": round(val_stock/100, 2)})
 
 def deliveries(request):
     deliveries_list = Delivery.objects.all()
