@@ -28,7 +28,7 @@ def catalogue_produit(request):
     paginator = Paginator(products_list, 10) # Show 25 contacts per page
     page = request.GET.get('page')
     products = paginator.get_page(page)
-    return render(request, "catalogue_produit.html", {'products': products})
+    return render(request, "catalogue_produit.html", {'products': products,'products_count': Produit.objects.count()})
 
 
 def crm(request):
@@ -37,7 +37,7 @@ def crm(request):
     page = request.GET.get('page')
     customers = paginator.get_page(page)
     fidcustomers = sum(1 for i in customers if i.Compte != "")
-    return render(request, "crm.html", {'customers': customers, 'fidcustomers': fidcustomers})
+    return render(request, "crm.html", {'customers': customers, 'fidcustomers': fidcustomers, 'customers_count': Customer.objects.count()})
 
 
 def tickets(request):
@@ -99,7 +99,7 @@ def incidents(request):
     paginator = Paginator(incidents_list, 10)
     page = request.GET.get('page')
     incidents = paginator.get_page(page)
-    return render(request, 'incidents.html', {'incidents': incidents})
+    return render(request, 'incidents.html', {'incidents': incidents, 'incidents_count': Incident.objects.count()})
 
 @csrf_exempt
 def get_catalogue(request):
